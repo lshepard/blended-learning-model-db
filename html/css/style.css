@@ -1,0 +1,19 @@
+p {
+ text-align: left;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+body {
+  color:#1B1B1B;
+  font-family:Lucida Grande,Verdana,Lucida Sans Regular,Lucida Sans Unicode,Arial,Verdana,sans-serif;
+  font-size:13px;
+  text-align:left;
+  margin: 20px;
+}
+table {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+table td {
+  font-size: 10px;
+}
