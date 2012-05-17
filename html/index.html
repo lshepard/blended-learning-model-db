@@ -4,15 +4,15 @@
 
 <link rel="stylesheet" type="text/css" href="datatables/media/css/jquery.dataTables.css" />
 <link rel="stylesheet" type="text/css" href="css/style.css" />
+<link rel="stylesheet" type="text/css" href="css/jquery.multiselect.css" />
+<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/overcast/jquery-ui.css" />
+
 <script src="datatables/media/js/jquery.js"></script>
 <script src="datatables/media/js/jquery.dataTables.js"></script>
 <script src="js/core.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+<script src="js/jquery.multiselect.js"></script>
 <script src="js/innosight_data.js"></script>
-<script>
-$(document).ready(function() {
-  init_table();
-});
-</script>
 
 </head>
 <body>
@@ -20,7 +20,7 @@ $(document).ready(function() {
 <h1>Innosight Model Database Viewer</h1>
 
 <p>
-The Innosight Institute maintains <a href="http://www.innosightinstitute.org/media-room/publications/blended-learning/blended-learning-profiles-all-profiles/">a list of fascinating case studies of schools that have experimented
+The Innosight Institute maintains <a href="http://www.innosightinstitute.org/media-room/publications/blended-learning/blended-learning-profiles-all-profiles/">a list of fascinating case studies</a> of schools that have experimented
 with some form of blended learning. In 2012, they wrote <a href="http://www.innosightinstitute.org/media-room/publications/education-publications/the-rise-of-k-12-blended-learning/">a white paper</a> with findings from about 40 of them.
 Since then, they have accepted user submissions and grown the list of models. However, on the website it's
 not that easy to sort and filter the models, especially as it grows.
@@ -30,8 +30,22 @@ This website offers a simple visual layer on top of the data offered by Innosigh
 to search, filter, and sort by a few major criteria. Click through any of the models to read the much more
 in-depth coverage on the Innosight website.
 </p>
+<p>
+This is just a basic prototype to demonstrate what's possible. The code for this website is available <a href="https://github.com/lshepard/blended-learning-model-db">on Github</a>.
+</p>
+
+<label for="program_models">Program Models</label>
+<select id="program_models" multiple="multiple">
+<option value="Online Lab">Online Lab</option>
+<option value="Self-Blend">Self-Blend</option>
+<option value="Flex">Flex</option>
+</select>
 
 <table id="models"></table>
+<script>
+  // Build the table from data
+  $(document).ready(init_table);
+</script>
 
 </body>
 </html>
