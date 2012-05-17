@@ -5,9 +5,9 @@ function init_table() {
   options['sErrMode'] = 'throw';
 
   // Remove the option to choose a pagination length
-  options['iDisplayLength'] = 20;
-  options['sDom'] = 'frtip'; // this is the default minus "l"ength
-  
+  options['iDisplayLength'] = 15;
+  options['sDom'] = 'C<"clear">frtip'; // this is the default minus "l"ength
+
   var oTable = $('#models').dataTable(options);
 
   $('#program_models').change(function() { 
@@ -39,7 +39,8 @@ function fetch_data_options() {
                model['blendedgrades'] ? model['blendedgrades'] : '',
                model['blendedenrollment'] ? model['blendedenrollment'] : '',
                model['blendedsubjects'] ? model['blendedsubjects'] : '',
-               model['programmodels'] ? model['programmodels'] : ''
+               model['programmodels'] ? model['programmodels'] : '',
+               model['alltext'] ? model['alltext'] : ''
                ]);
   }
 
@@ -49,16 +50,17 @@ function fetch_data_options() {
   return {
     aoColumns: [{'sTitle': 'Model Name'},
                 {'sTitle': 'Detail'},
-                {'sTitle': 'Date Posted', 'sType': 'date'},
-                {'sTitle': 'City'},
-                {'sTitle': 'State'},
+                {'sTitle': 'Date Posted', 'sType': 'date', 'bVisible': false},
+                {'sTitle': 'City', 'bVisible': false},
+                {'sTitle': 'State', 'bFilterable': true, 'bSortable': false, 'sWidth': '100px'},
                 {'sTitle': 'Type', 'bSortable': false, 'bFilterable': true},
                 {'sTitle': 'Focus', 'bSortable': false, 'bFilterable': true},
-                {'sTitle': 'Grades Served'},
-                {'sTitle': 'Blended Grades'},
-                {'sTitle': 'Blended Enrollment', 'sType': 'formatted-num'},
-                {'sTitle': 'Blended Subjects', 'bSortable': false, 'bFilterable': true},
-                {'sTitle': 'Program Models', 'bSortable': false, 'bFilterable': true}
+                {'sTitle': 'Grades Served', 'bVisible': false},
+                {'sTitle': 'Grades', 'bVisible': false},
+                {'sTitle': 'Blended Enrollment', 'sType': 'formatted-num', 'bVisible': false},
+                {'sTitle': 'Subjects', 'bSortable': false, 'bFilterable': true},
+                {'sTitle': 'Program Models', 'bSortable': false, 'bFilterable': true},
+                {'sTitle': 'All Text', 'bVisible': false, 'bSearchable': true}
                 ],
     aaData: data};
 }

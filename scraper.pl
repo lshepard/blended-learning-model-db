@@ -68,6 +68,7 @@ sub scrape_data_per_page {
 
         # Info extracted from the free-text fields
         process '//div/p[strong[contains(.,"Program model:")]]/text()', 'programmodels' => 'TEXT';
+        process 'div.entry', 'alltext' => 'TEXT';
     };
 
     # Fetch the webpage and do the scraping
@@ -79,7 +80,9 @@ sub scrape_data_per_page {
     ($res->{hqcity}, $res->{hqstate}) = split(', ?', $res->{hq});
     $res->{postdate} =~ s/Posted on (.*) by .*/$1/;  # strip out verbosity
     $res->{postdate} =~ s/(\d)(st|nd|rd|th)/$1/;     # remove text part of 1st, 2nd, etc for JS Date.parse function
-    $res->{programmodels} =~ s/^\s+//;               # remove leading whitespace
+    if ($res->{programmodels}) {
+        $res->{programmodels} =~ s/^\s+//;               # remove leading whitespace
+    }
     return $res;
 }
 

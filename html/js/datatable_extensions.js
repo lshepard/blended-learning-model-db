@@ -23,9 +23,12 @@ function initFilteredColumn(oSettings, iColumn) {
     
     for (var iRow = 0; iRow < oSettings.aoData.length; ++iRow) {
       var value = oSettings.aoData[iRow]._aData[iColumn];
-      var values = value.split(', ');
+      var values = value.split(',');
       for (var i = 0; i < values.length; ++i) {
-        allValues[values[i]] = values[i];
+        var value = values[i];
+        // normalize
+        value.replace(/^\s+|\s+$/g,"").toLowerCase();
+        allValues[value] = values[i];
       }
     }
     
@@ -40,17 +43,17 @@ function initFilteredColumn(oSettings, iColumn) {
     // register redrawing
     select.change(function() { oSettings.oInstance.fnDraw(); });
 
-    // style
-    $(oSettings.aoColumns[iColumn].nTh).append(select);
+    var container = $('<div class="ui-multiselect"/>');
+    container.append(select);
+    $(oSettings.aoColumns[iColumn].nTh).append(container);
     
-    select.multiselect({header: false,
+    select.multiselect({header: true,
           selectedList: 0,
           selectedText: "",
           noneSelectedText: "",
           checkAllText: "All",
           uncheckAllText: "None",
           height: "auto"});
-    
 
     // now that it's created, append it to the column header
     oSettings.aoColumns[iColumn].filterSelect = select;
@@ -75,11 +78,9 @@ $.fn.dataTableExt.afnFiltering.push
        // pull the dropdown reference from the config
        var options = oSettings.aoColumns[iColumn].filterSelect[0].options;
        
-       console.log("custom filter on ", aData[iColumn].split(','));
-       
        // get an object with keys for each comma-delimited element here
        // n^2 algo but each one should be really small so no big deal
-       var potential_matches = aData[iColumn].split(', ');
+       var potential_matches = aData[iColumn].split(',');
        
        var passedThisRound = true;
        for (var i = 0; i < options.length; ++i) {

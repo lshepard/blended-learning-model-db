@@ -3,12 +3,14 @@
 <title>Innosight Model Database Viewer</title>
 
 <link rel="stylesheet" type="text/css" href="datatables/media/css/jquery.dataTables.css" />
+<link rel="stylesheet" type="text/css" href="datatables/extras/ColVis/media/css/ColVis.css" />
 <link rel="stylesheet" type="text/css" href="css/style.css" />
 <link rel="stylesheet" type="text/css" href="css/jquery.multiselect.css" />
 <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/overcast/jquery-ui.css" />
 
 <script src="datatables/media/js/jquery.js"></script>
 <script src="datatables/media/js/jquery.dataTables.js"></script>
+<script src="datatables/extras/ColVis/media/js/ColVis.js"></script>
 <script src="js/core.js"></script>
 <script src="js/datatable_extensions.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
@@ -21,19 +23,22 @@
 <h1>Innosight Model Database Viewer</h1>
 
 <p>
-The Innosight Institute maintains <a href="http://www.innosightinstitute.org/media-room/publications/blended-learning/blended-learning-profiles-all-profiles/">a list of fascinating case studies</a> of schools that have experimented
+The Innosight Institute has researched <a href="http://www.innosightinstitute.org/media-room/publications/blended-learning/blended-learning-profiles-all-profiles/">a list of fascinating case studies</a> of schools that have experimented
 with some form of blended learning. In 2012, they wrote <a href="http://www.innosightinstitute.org/media-room/publications/education-publications/the-rise-of-k-12-blended-learning/">a white paper</a> with findings from about 40 of them.
-Since then, they have accepted user submissions and grown the list of models. However, on the website it's
-not that easy to sort and filter the models, especially as it grows.
+Since then, the list of user submissions has grown.
 </p>
 <p>
-This website offers a simple visual layer on top of the data offered by Innosight. You can use this tool
+This website offers a simple visual layer on top of the Innosight data. You can use this
 to search, filter, and sort by a few major criteria. Click through any of the models to read the much more
-in-depth coverage on the Innosight website.
+in-depth coverage on the Innosight website. (This is still pretty basic. Feel free to view
+or contribute to the source code <a href="https://github.com/lshepard/blended-learning-model-db">on Github</a>).
 </p>
-<p>
-This is just a basic prototype to demonstrate what's possible. The code for this website is available <a href="https://github.com/lshepard/blended-learning-model-db">on Github</a>.
-</p>
+<p>Some of what you can do:</p>
+<ul>
+<li><b>Search</b> in the box to the right. You can search for terms that appear anywhere in the model content - for instance, enter "khan" to see all that are using Khan Academy.</li>
+<li><b>Filter</b> by clicking on the column titles.</li>
+<li><b>View More Columns</b> by clicking "Show/Hide Columns"</li>
+</ul>
 
 <table id="models"></table>
 <script>
