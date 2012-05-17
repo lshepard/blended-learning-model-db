@@ -27,7 +27,7 @@ function initFilteredColumn(oSettings, iColumn) {
       for (var i = 0; i < values.length; ++i) {
         var value = values[i];
         // normalize
-        value.replace(/^\s+|\s+$/g,"").toLowerCase();
+        value = value.replace(/^\s+|\s+$/g,"").toLowerCase();
         allValues[value] = values[i];
       }
     }
@@ -88,7 +88,7 @@ $.fn.dataTableExt.afnFiltering.push
            passedThisRound = false;
            // now look through all the objects in split
            for (var j = 0; j < potential_matches.length; ++j) {
-             if (potential_matches[j].indexOf(options[i].value) != -1) {
+             if (potential_matches[j].toLowerCase().indexOf(options[i].value) != -1) {
                passedThisRound = true;
                break;
              }

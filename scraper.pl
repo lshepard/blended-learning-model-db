@@ -58,13 +58,24 @@ sub scrape_data_per_page {
 	process "div.post > div.postdate", 'postdate' => 'TEXT';
 
         # These fields all come from the table at the top of the page
-	process '//td[.="Headquarters"]/following-sibling::td[1]', 'hq' => 'TEXT';
 	process '//td[.="Operator type"]/following-sibling::td[1]', 'type' => 'TEXT';
+	process '//td[.="Headquarters"]/following-sibling::td[1]', 'hq' => 'TEXT';
 	process '//td[.="Focus"]/following-sibling::td[1]', 'focus' => 'TEXT';
 	process '//td[.="Grades served"]/following-sibling::td[1]', 'gradesserved' => 'TEXT';
+	process '//td[.="% FRL"]/following-sibling::td[1]', 'frl' => 'TEXT';
+	process '//td[.="% Black or Hispanic"]/following-sibling::td[1]', 'minority' => 'TEXT';
+	process '//td[.="Revenue per pupil"]/following-sibling::td[1]', 'revenueperpupil' => 'TEXT';
+
 	process '//td[.="Blended grades"]/following-sibling::td[1]', 'blendedgrades' => 'TEXT';
 	process '//td[.="Enrollment"]/following-sibling::td[1]', 'blendedenrollment' => 'TEXT';
 	process '//td[.="Blended subjects"]/following-sibling::td[1]', 'blendedsubjects' => 'TEXT';
+	process '//td[.="Content"]/following-sibling::td[1]', 'content' => 'TEXT';
+	process '//td[.="SIS"]/following-sibling::td[1]', 'sis' => 'TEXT';
+	process '//td[.="Independent LMS"]/following-sibling::td[1]', 'indylms' => 'TEXT';
+	process '//td[.="Independent gradebook"]/following-sibling::td[1]', 'indygradebook' => 'TEXT';
+	process '//td[.="Independent assessment tool"]/following-sibling::td[1]', 'indyassessment' => 'TEXT';
+	process '//td[.="Link between LMS and SIS"]/following-sibling::td[1]', 'lmssislink' => 'TEXT';
+	process '//td[.="Other tools"]/following-sibling::td[1]', 'othertools' => 'TEXT';
 
         # Info extracted from the free-text fields
         process '//div/p[strong[contains(.,"Program model:")]]/text()', 'programmodels' => 'TEXT';
