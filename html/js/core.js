@@ -84,7 +84,7 @@ function fetch_data_options() {
                 {'sTitle': 'Revenue per Pupil', 'sType': 'formatted-num', 'bVisible': false},
 
                 {'sTitle': 'Blended Grades', 'bVisible': false},
-                {'sTitle': 'Blended Enrollment', 'bVisible': false},
+                {'sTitle': 'Blended Enrollment', 'bVisible': false, 'sType': 'formatted-num'},
                 {'sTitle': 'Content', 'bVisible': false,'bSortable': false, 'bFilterable': true},
                 {'sTitle': 'Student Information System', 'bVisible': false,'bSortable': false, 'bFilterable': true},
                 {'sTitle': 'Independent LMS', 'bVisible': false,'bSortable': false, 'bFilterable': true},
