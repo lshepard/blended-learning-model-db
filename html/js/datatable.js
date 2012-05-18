@@ -1,7 +1,9 @@
+/*
+ * Initialize the data table options and the initial seed data.
+ */
 function init_table() {
   
   var options = fetch_data_options();
-  //  options['bPaginate'] = false;
   options['sErrMode'] = 'throw';
 
   // Remove the option to choose a pagination length
@@ -28,13 +30,14 @@ function init_table() {
 function fetch_data_options() {
   var data = [];
   for (var i = 0; i < table_data.length; ++i) {
-    model = table_data[i];
+    var model = table_data[i];
 
     var title_link = '<a href="' + 
       model['url'] + '">' +
       model['title'] +
       '</a>';
 
+    // this whole section is pretty shitty, would be great to get rid of
     data.push([title_link,
                model['alltext'] ? model['alltext'] : '',
                model['detail'] ? model['detail'] : '', 

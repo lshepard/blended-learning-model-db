@@ -17,3 +17,9 @@ table {
 table td {
   font-size: 10px;
 }
+
+#map_canvas {
+  margin: auto;
+  width: 1000px;
+  height: 500px;
+}

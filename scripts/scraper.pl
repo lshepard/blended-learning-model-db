@@ -18,9 +18,9 @@
 use warnings;
 use strict;
 use URI;
-use Web::Scraper;
-use Data::Dumper;
 use JSON;
+use Data::Dumper;
+use Web::Scraper;
 
 my $json = JSON->new->pretty;
 my $limit = $ARGV[0] ? $ARGV[0] : 1000;
@@ -96,6 +96,8 @@ sub scrape_data_per_page {
     }
     return $res;
 }
+
+
 
 # main body of script execution
 

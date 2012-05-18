@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 <title>Innosight Model Database Viewer</title>
@@ -11,11 +12,14 @@
 <script src="datatables/media/js/jquery.js"></script>
 <script src="datatables/media/js/jquery.dataTables.js"></script>
 <script src="datatables/extras/ColVis/media/js/ColVis.js"></script>
-<script src="js/core.js"></script>
+<script src="js/datatable.js"></script>
 <script src="js/datatable_extensions.js"></script>
+<script src="js/maps.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 <script src="js/jquery.multiselect.js"></script>
 <script src="js/innosight_data.js"></script>
+<script src="js/geocode_data.js"></script>
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCg9iJJ7Lpm7Rj0IRZCk58vB9h5NM4Js-I&sensor=false"></script>
 
 </head>
 <body>
@@ -34,10 +38,16 @@ in-depth coverage on the Innosight website. (This is still pretty basic. Feel fr
 or contribute to the source code <a href="https://github.com/lshepard/blended-learning-model-db">on Github</a>).
 </p>
 
+<div id="map_canvas" ></div>
+
 <table id="models"></table>
+
 <script>
   // Build the table from data
-  $(document).ready(init_table);
+  $(document).ready(function() {
+    init_table();
+    init_map();
+  });
 </script>
 
 </body>
