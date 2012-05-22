@@ -7,94 +7,88 @@ function init_table() {
   options['sErrMode'] = 'throw';
 
   // Remove the option to choose a pagination length
-  options['iDisplayLength'] = 15;
-  options['sDom'] = 'pCrtifl'; // this is the default minus "l"ength
+  options['iDisplayLength'] = 10;
+  options['sDom'] = 'fCpit'; // this is the default minus "l"ength
 
   options['oColVis'] = {
     activate: "mouseover",
-    aiExclude: [1], // alltext
+    aiExclude: [1], // Don't show alltext in the "See more columns" list
     buttonText: 'See More Columns',
     iOverlayFade: 0,
   };
 
-  var oTable = $('#models').dataTable(options);
+  options['fnDrawCallback'] = function(oSettings) {
+    var data = this.fnGetFilteredData();
 
-  $('#program_models').change(function() { 
-    console.log('onchange'); 
-    oTable.fnDraw(); 
-    });
+    // convert the data into an array of meaningful points
+    var location_data = 
+    this.fnGetFilteredData().map(function(row) {
+        // these hard-coded column indices sucks
+        return { 
+          location: row[8] + ',' + row[2], // city,state - precisely
+          title: row[0]
+            };
+      })
+
+    // defer execution until current call stack is out, to give time
+    // for the map to be created
+    setTimeout(function () {
+      plot_points(location_data);
+      },0);
+  }
+
+  // create and draw the table
+  $('#models').dataTable(options);
 }
 
 // Convert from the incoming JSON hash
 // to the nested array structure that DataTable expects
 function fetch_data_options() {
   var data = [];
+
+  var aoColumns = 
+    [{input: 'displaytitle',      sTitle: 'Model', sWidth: '250px'},
+     {input: 'alltext',           sTitle: 'All Text', bVisible: false, 'bSearchable': true},
+     {input: 'hqstate',           sTitle: 'State', bFilterable: true, sWidth: '100px'},
+     {input: 'type',              sTitle: 'Type', bFilterable: true},
+     {input: 'focus',             sTitle: 'Focus', bFilterable: true},
+     {input: 'blendedsubjects',   sTitle: 'Subjects', bFilterable: true},
+     {input: 'programmodels',     sTitle: 'Program Models', bFilterable: true},
+     {input: 'postdate',          sTitle: 'Date Posted', 'sType': 'date', bVisible: false},
+     {input: 'hqcity',            sTitle: 'City', bVisible: false},
+     {input: 'gradesserved',      sTitle: 'Grades Served', bVisible: false},
+     {input: 'frl',               sTitle: '% Free or Reduced Lunch', bVisible: false, 'sType': 'formatted-num'},
+     {input: 'minority',          sTitle: '% Black/ or Hispanic', bVisible: false, 'sType': 'formatted-num'},
+     {input: 'revenueperpupil',   sTitle: 'Revenue per Pupil', 'sType': 'formatted-num', bVisible: false},
+     {input: 'blendedgrades',     sTitle: 'Blended Grades', bVisible: false},
+     {input: 'blendedenrollment', sTitle: 'Blended Enrollment', bVisible: false, 'sType': 'formatted-num'},
+     {input: 'content',           sTitle: 'Content', bVisible: false,bFilterable: true},
+     {input: 'sis',               sTitle: 'Student Information System', bVisible: false, bFilterable: true},
+     {input: 'othertools',        sTitle: 'Other Tools', bVisible: false, bFilterable: true},
+     {input: 'indylms',           sTitle: 'Independent LMS', bVisible: false, bFilterable: true},
+     {input: 'indygradebook',     sTitle: 'Independent Gradebook Grades', bVisible: false, bFilterable: true},
+     {input: 'indyassessment',    sTitle: 'Independent Assessment', bVisible: false, bFilterable: true},
+     {input: 'lmssislink',        sTitle: 'LMS and SIS Link', 'sType': 'formatted-num', bVisible: false, bFilterable: true}
+     ];
+
   for (var i = 0; i < table_data.length; ++i) {
     var model = table_data[i];
 
-    var title_link = '<a href="' + 
+    model['displaytitle'] = '<a href="' + 
       model['url'] + '">' +
       model['title'] +
       '</a>';
 
-    // this whole section is pretty shitty, would be great to get rid of
-    data.push([title_link,
-               model['alltext'] ? model['alltext'] : '',
-               model['detail'] ? model['detail'] : '', 
-               model['hqstate'] ? model['hqstate'] : '',
-               model['type'] ? model['type'] : '',
-               model['focus'] ? model['focus'] : '',
-               model['blendedsubjects'] ? model['blendedsubjects'] : '',
-               model['programmodels'] ? model['programmodels'] : '',
+    if (model['detail']) {
+      model['displaytitle'] += '<br />' + model['detail'];
+    }
 
-               model['postdate'] ? model['postdate'] : '',
-               model['hqcity'] ? model['hqcity'] : '',
-               model['gradesserved'] ? model['gradesserved'] : '',
-               model['frl'] ? model['frl'] : '',
-               model['minority'] ? model['minority'] : '',
-               model['revenueperpupil'] ? model['revenueperpupil'] : '',
-
-               model['blendedgrades'] ? model['blendedgrades'] : '',
-               model['blendedenrollment'] ? model['blendedenrollment'] : '',
-               model['content'] ? model['content'] : '',
-               model['sis'] ? model['sis'] : '',
-               model['othertools'] ? model['othertools'] : '',
-               model['indylms'] ? model['indylms'] : '',
-               model['indygradebook'] ? model['indygradebook'] : '',
-               model['indyassessment'] ? model['indyassessment'] : '',
-               model['lmssislink'] ? model['lmssislink'] : ''
-               ]);
+    // go through the column definitions and put the respective columns into their right place
+    data.push(aoColumns.map(function(col) { 
+          return model[col.input] ? model[col.input] : ''; 
+    }));
   }
 
-  var headers = [
-                 ];
-
-  return {
-    aoColumns: [{'sTitle': 'Model Name'},
-                {'sTitle': 'All Text', 'bVisible': false, 'bSearchable': true},
-                {'sTitle': 'Detail', 'sWidth': '250px'},
-                {'sTitle': 'State', 'bFilterable': true, 'sWidth': '100px'},
-                {'sTitle': 'Type', 'bFilterable': true},
-                {'sTitle': 'Focus', 'bSortable': false, 'bFilterable': true},
-                {'sTitle': 'Subjects', 'bSortable': false, 'bFilterable': true},
-                {'sTitle': 'Program Models', 'bSortable': false, 'bFilterable': true},
-
-                {'sTitle': 'Date Posted', 'sType': 'date', 'bVisible': false},
-                {'sTitle': 'City', 'bVisible': false},
-                {'sTitle': 'Grades Served', 'bVisible': false},
-                {'sTitle': '% Free or Reduced Lunch', 'bVisible': false, 'sType': 'formatted-num'},
-                {'sTitle': '% Black or Hispanic', 'bVisible': false, 'sType': 'formatted-num'},
-                {'sTitle': 'Revenue per Pupil', 'sType': 'formatted-num', 'bVisible': false},
-
-                {'sTitle': 'Blended Grades', 'bVisible': false},
-                {'sTitle': 'Blended Enrollment', 'bVisible': false, 'sType': 'formatted-num'},
-                {'sTitle': 'Content', 'bVisible': false,'bSortable': false, 'bFilterable': true},
-                {'sTitle': 'Student Information System', 'bVisible': false,'bSortable': false, 'bFilterable': true},
-                {'sTitle': 'Independent LMS', 'bVisible': false,'bSortable': false, 'bFilterable': true},
-                {'sTitle': 'Independent Gradebook Grades', 'bVisible': false,'bSortable': false, 'bFilterable': true},
-                {'sTitle': 'Independent Assessment', 'bVisible': false,'bSortable': false, 'bFilterable': true},
-                {'sTitle': 'LMS and SIS Link', 'sType': 'formatted-num', 'bVisible': false,'bSortable': false, 'bFilterable': true}
-                ],
-    aaData: data};
+  return {aoColumns: aoColumns, aaData: data};
 }
 

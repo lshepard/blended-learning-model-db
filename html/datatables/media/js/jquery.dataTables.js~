@@ -1448,6 +1448,7 @@
 			}
 			
 			/* Call all required callback functions for the end of a draw */
+                        debugger;
 			_fnCallbackFire( oSettings, 'aoDrawCallback', 'draw', [oSettings] );
 			
 			/* Draw is complete, sorting and filtering must be as well */
@@ -7251,7 +7252,7 @@
 		 *  @type string
 		 *  @default alert
 		 */
-		"sErrMode": "alert",
+		"sErrMode": "throw",
 	
 	
 		/**

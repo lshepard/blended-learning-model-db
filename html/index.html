@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Innosight Model Database Viewer</title>
+<title>Blended Learning Model Database</title>
 
 <link rel="stylesheet" type="text/css" href="datatables/media/css/jquery.dataTables.css" />
 <link rel="stylesheet" type="text/css" href="datatables/extras/ColVis/media/css/ColVis.css" />
@@ -12,6 +12,7 @@
 <script src="datatables/media/js/jquery.js"></script>
 <script src="datatables/media/js/jquery.dataTables.js"></script>
 <script src="datatables/extras/ColVis/media/js/ColVis.js"></script>
+<script src="js/ui.js"></script>
 <script src="js/datatable.js"></script>
 <script src="js/datatable_extensions.js"></script>
 <script src="js/maps.js"></script>
@@ -24,27 +25,68 @@
 </head>
 <body>
 
-<h1>Innosight Model Database Viewer</h1>
+<h1>Blended Learning Model Database<h1>
+<h2>from Innosight</h2>
 
 <p>
-The Innosight Institute has researched <a href="http://www.innosightinstitute.org/media-room/publications/blended-learning/blended-learning-profiles-all-profiles/">a list of fascinating case studies</a> of schools that have experimented
-with some form of blended learning. In 2012, they wrote <a href="http://www.innosightinstitute.org/media-room/publications/education-publications/the-rise-of-k-12-blended-learning/">a white paper</a> with findings from about 40 of them.
-Since then, the list of user submissions has grown.
+In 2011, the Innosight Institute wrote <a href="http://www.innosightinstitute.org/media-room/publications/education-publications/the-rise-of-k-12-blended-learning/">a widely read white paper</a> that summarized the ongoing state of blended learning in America. In conjunction with that white paper, the Institute has published a <a href="http://www.innosightinstitute.org/media-room/publications/blended-learning/blended-learning-profiles-all-profiles/">a list of fascinating case studies</a> of schools that have experimented with some form of blended learning.
 </p>
 <p>
-This website offers a simple visual layer on top of the Innosight data. You can use this
-to search, filter, and sort by a few major criteria. Click through any of the models to read the much more
-in-depth coverage on the Innosight website. (This is still pretty basic. Feel free to view
-or contribute to the source code <a href="https://github.com/lshepard/blended-learning-model-db">on Github</a>).
+Use this tool to <b>filter</b> and <b>sort</b> through the case studies.
 </p>
+<p style="text-align:right">
+The code for this website is available <a href="https://github.com/lshepard/blended-learning-model-db">on Github</a>.
+</p>
+<hr />
 
-<div id="map_canvas" ></div>
+<div id="filter_form">
+
+<label for="filtered_hqstate">State</label>
+<select id="filtered_hqstate" multiple="multiple" ></select>
+
+<label for="filtered_type">Type</label>
+<select id="filtered_type" multiple="multiple" ></select>
+
+<label for="filtered_focus">Focus</label>
+<select id="filtered_focus" multiple="multiple" ></select>
+
+<label for="filtered_blendedsubjects">Subjects</label>
+<select id="filtered_blendedsubjects" multiple="multiple" ></select>
+
+<label for="filtered_programmodels">Program Models</label>
+<select id="filtered_programmodels" multiple="multiple" ></select>
+
+<label for="filtered_content">Content Providers</label>
+<select id="filtered_content" multiple="multiple" ></select>
+
+<label for="filtered_sis">Student Information System</label>
+<select id="filtered_sis" multiple="multiple" ></select>
+
+<label for="filtered_othertools">Other Tools</label>
+<select id="filtered_othertools" multiple="multiple" ></select>
+
+<label for="filtered_indygradebook">Gradebook</label>
+<select id="filtered_indygradebook" multiple="multiple" ></select>
+
+<label for="filtered_indylms">LMS</label>
+<select id="filtered_indylms" multiple="multiple" ></select>
+
+<label for="filtered_indyassessment">Assessment</label>
+<select id="filtered_indyassessment" multiple="multiple" ></select>
+
+<label for="filtered_lmssislink">LMS/SIS Link</label>
+<select id="filtered_lmssislink" multiple="multiple" ></select><br />
+
+</div>
 
 <table id="models"></table>
 
+<a id="show_hide_map" class="show_hide_link" ></a>
+<div id="map_canvas"></div>
+
 <script>
-  // Build the table from data
   $(document).ready(function() {
+    init_ui();
     init_table();
     init_map();
   });

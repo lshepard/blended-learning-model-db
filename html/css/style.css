@@ -20,6 +20,19 @@ table td {
 
 #map_canvas {
   margin: auto;
-  width: 1000px;
+  width: 70%;
   height: 500px;
+  padding: 15px;
+}
+
+.show_hide_link {
+  float: right;
+  clear: right;
+  color: blue;
+  padding: 5px;
+  display: block;
+}
+
+#models_wrapper {
+  padding-bottom: 20px;
 }
