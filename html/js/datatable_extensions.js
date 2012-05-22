@@ -16,23 +16,31 @@ jQuery.fn.dataTableExt.oSort['formatted-num-desc'] = function(a,b) {
   return parseFloat(y) - parseFloat(x);
 };
 
+/*
+ * Populate and setup the columns that can be filtered.
+ */
 function initFilteredColumn(oSettings, iColumn) {
   if (!oSettings.aoColumns[iColumn].filterSelect) {
 
-    var allValues = {};
-    
+    var deDupedOptions = {};
     for (var iRow = 0; iRow < oSettings.aoData.length; ++iRow) {
       var value = oSettings.aoData[iRow]._aData[iColumn];
       var values = value.split(',');
       for (var i = 0; i < values.length; ++i) {
+        // normalize - remove whitespace and lowercase
         var value = values[i];
-        // normalize
-        value = value.replace(/^\s+|\s+$/g,"").toLowerCase();
-        allValues[value] = values[i];
+        key = value.replace(/^\s+|\s+$/g,"").toLowerCase();
+        deDupedOptions[key] = {value: value, 
+                               key: key};
       }
     }
-    // okay, allValues now contains the desired contents of the <select>
-    
+    var options = [];
+    for (var key in deDupedOptions) {
+      options.push(deDupedOptions[key]);
+    }
+    options.sort(function(a, b) {
+        return a.value > b.value ? 1 : ( a.value === b.value ? 0 : -1 );
+    });
     
     var colNameVar = oSettings.aoColumns[iColumn]['input'].replace(' ', '_').toLowerCase();
     var select = $('#filtered_' + colNameVar);
@@ -45,8 +53,8 @@ function initFilteredColumn(oSettings, iColumn) {
       $(oSettings.aoColumns[iColumn].nTh).append(container);
     }
 
-    for (var key in allValues) {
-      select.append(new Option(allValues[key], key, true));
+    for (var i = 0 ; i < options.length; ++i) {
+      select.append(new Option(options[i].value, options[i].key, true));
     }
 
     // register redrawing
