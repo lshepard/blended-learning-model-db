@@ -53,7 +53,9 @@ function plot_points(models) {
   }
 
   // zoom to fit
-  map.fitBounds(bounds);
+  if (markers.length > 0) {
+    map.fitBounds(bounds);
+  }
 
   // we only have city-level accuracy, so don't zoom too close
   if (map.getZoom() > 8) {
@@ -64,7 +66,9 @@ function plot_points(models) {
 function clear_markers() {
   for (i in markers) {
     markers[i].setMap(null);
+    markers[i] = null;
   }
+  markers = [];
 }
 
 function make_marker(latLng, content) {
