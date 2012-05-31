@@ -58,8 +58,8 @@ function plot_points(models) {
   }
 
   // we only have city-level accuracy, so don't zoom too close
-  if (map.getZoom() > 8) {
-    map.setZoom(8);
+  if (map.getZoom() > 6) {
+    map.setZoom(6);
   }
 }
 
