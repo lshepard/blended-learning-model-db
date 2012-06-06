@@ -22,7 +22,10 @@ class InnosightScraper
     
     links.each {|link| 
       doc = Nokogiri::HTML(open(link['href']))
-      result = {'url' => link['href']}
+      result = {
+          'url' => link['href'],
+          'source' => 'innosight'
+          }
       
       # css scraping
       result['title']     = scrape(doc, 'div.post > h2')
@@ -79,13 +82,62 @@ class InnosightScraper
   end
 end
 
+# Port of the original perl scraping script
+# As we add additional data sources, they should become their own classes
+class EdSurgeScraper
+  @@list_url= 'https://www.edsurge.com/s'
+
+  @results = []
+
+  def initialize
+    doc = Nokogiri::HTML(open(@@list_url))
+    links = doc.css('div#index_show_objects > div.object_partial > a')
+    puts "Found " + links.count.to_s + " schools\n"
+
+    @results = []
+    
+    links.each {|link|
+      uri = URI.parse(@@list_url).merge(link['href']).to_s
+      doc = Nokogiri::HTML(open(uri))
+      result = {
+          'url' => uri,
+          'source' => 'edsurge'
+          }
+      
+      # css scraping
+      result['title']     = scrape(doc, 'div#md_n')
+      result['detail']    = scrape(doc, 'div#md_d')
+      
+      # arrays
+      result['desc']    = doc.search('div#basics_section > div > div > p')
+      result['products']    = doc.search('div#products * a')
+
+
+      puts " Processed " + result['title'] + "\n"
+      @results.push(result)
+      break
+    }
+  end
+
+  def results
+    @results
+  end
+  
+  def scrape(doc, search)
+    node = doc.search(search).pop
+    return node ? node.text.strip : nil 
+  end
+end
+
 
 # first: scrape
 
-r = InnosightScraper.new
+#innosight = InnosightScraper.new
+edsurge = EdSurgeScraper.new
 
 # this should be using the CLOUDANT_URL env variable, but i'm not sure how to get that on my local machine
 @db = CouchRest.database!("https://app4701148.heroku:oueLS2tF0oJjCCvIOk6xaHDi@app4701148.heroku.cloudant.com/example")
-@db.delete!
-@db.create!
-@db.bulk_save(r.results)
+#@db.delete!
+#@db.create!
+#@db.bulk_save(innosight.results)
+@db.bulk_save(edsurge.results)
