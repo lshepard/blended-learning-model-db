@@ -1,3 +1,6 @@
+var colNumLookup = {};
+var aoColumns; // global is terrible but needd for fnCreatedRow for now
+
 /*
  * Initialize the data table options and the initial seed data.
  */
@@ -8,34 +11,11 @@ function init_table() {
 
   // Remove the option to choose a pagination length
   options['iDisplayLength'] = 10;
-  options['sDom'] = 'fCpit'; // this is the default minus "l"ength
+  options['sDom'] = 'tpi'; // this is the default minus "l"ength
+  options['bAutoWidth'] = false;
 
-  options['oColVis'] = {
-    activate: "mouseover",
-    aiExclude: [1], // Don't show alltext in the "See more columns" list
-    buttonText: 'See More Columns',
-    iOverlayFade: 0,
-  };
-
-  options['fnDrawCallback'] = function(oSettings) {
-    var data = this.fnGetFilteredData();
-
-    // convert the data into an array of meaningful points
-    var location_data = 
-    this.fnGetFilteredData().map(function(row) {
-        // these hard-coded column indices sucks
-        return { 
-          location: row[8] + ',' + row[2], // city,state - precisely
-          title: row[0]
-            };
-      })
-
-    // defer execution until current call stack is out, to give time
-    // for the map to be created
-    setTimeout(function () {
-      plot_points(location_data);
-      },0);
-  }
+  options['fnDrawCallback'] = fnDrawCallback;
+  options['fnCreatedRow'] = fnCreatedRow;
 
   // create and draw the table
   $('#models').dataTable(options);
@@ -46,42 +26,39 @@ function init_table() {
 function fetch_data_options() {
   var data = [];
 
-  var aoColumns = 
-    [{input: 'displaytitle',      sTitle: 'Model', sWidth: '250px'},
-     {input: 'alltext',           sTitle: 'All Text', bVisible: false, 'bSearchable': true},
+  aoColumns =
+    [{input: 'title',             sTitle: 'Model', sWidth: '250px'},
+     {input: 'detail',            sTitle: 'Detail'},
+     {input: 'url',               sTitle: 'URL'},
      {input: 'hqstate',           sTitle: 'State', bFilterable: true, sWidth: '100px'},
      {input: 'type',              sTitle: 'Type', bFilterable: true},
      {input: 'focus',             sTitle: 'Focus', bFilterable: true},
      {input: 'blendedsubjects',   sTitle: 'Subjects', bFilterable: true},
      {input: 'programmodels',     sTitle: 'Program Models', bFilterable: true},
-     {input: 'postdate',          sTitle: 'Date Posted', 'sType': 'date', bVisible: false},
-     {input: 'hqcity',            sTitle: 'City', bVisible: false},
-     {input: 'gradesserved',      sTitle: 'Grades Served', bVisible: false},
-     {input: 'frl',               sTitle: '% Free or Reduced Lunch', bVisible: false, 'sType': 'formatted-num'},
-     {input: 'minority',          sTitle: '% Black/ or Hispanic', bVisible: false, 'sType': 'formatted-num'},
-     {input: 'revenueperpupil',   sTitle: 'Revenue per Pupil', 'sType': 'formatted-num', bVisible: false},
-     {input: 'blendedgrades',     sTitle: 'Blended Grades', bVisible: false},
-     {input: 'blendedenrollment', sTitle: 'Blended Enrollment', bVisible: false, 'sType': 'formatted-num'},
-     {input: 'content',           sTitle: 'Content', bVisible: false,bFilterable: true},
-     {input: 'sis',               sTitle: 'Student Information System', bVisible: false, bFilterable: true},
-     {input: 'othertools',        sTitle: 'Other Tools', bVisible: false, bFilterable: true},
-     {input: 'indylms',           sTitle: 'Independent LMS', bVisible: false, bFilterable: true},
-     {input: 'indygradebook',     sTitle: 'Independent Gradebook Grades', bVisible: false, bFilterable: true},
-     {input: 'indyassessment',    sTitle: 'Independent Assessment', bVisible: false, bFilterable: true},
-     {input: 'lmssislink',        sTitle: 'LMS and SIS Link', 'sType': 'formatted-num', bVisible: false, bFilterable: true}
+     {input: 'postdate',          sTitle: 'Date Posted', 'sType': 'date'},
+     {input: 'hqcity',            sTitle: 'City'},
+     {input: 'gradesserved',      sTitle: 'Grades Served'},
+     {input: 'frl',               sTitle: '% Free or Reduced Lunch', 'sType': 'formatted-num'},
+     {input: 'minority',          sTitle: '% Black/ or Hispanic', 'sType': 'formatted-num'},
+     {input: 'revenueperpupil',   sTitle: 'Revenue per Pupil', 'sType': 'formatted-num'},
+     {input: 'blendedgrades',     sTitle: 'Blended Grades'},
+     {input: 'blendedenrollment', sTitle: 'Blended Enrollment', 'sType': 'formatted-num'},
+     {input: 'content',           sTitle: 'Content',bFilterable: true},
+     {input: 'sis',               sTitle: 'Student Information System', bFilterable: true},
+     {input: 'othertools',        sTitle: 'Other Tools', bFilterable: true},
+     {input: 'indylms',           sTitle: 'Independent LMS', bFilterable: true},
+     {input: 'indygradebook',     sTitle: 'Independent Gradebook Grades', bFilterable: true},
+     {input: 'indyassessment',    sTitle: 'Independent Assessment', bFilterable: true},
+     {input: 'lmssislink',        sTitle: 'LMS and SIS Link', 'sType': 'formatted-num', bFilterable: true}
      ];
+
+  // generate a reverse map from name to index
+  for (var i = 0; i < aoColumns.length; ++i) {
+    colNumLookup[aoColumns[i].input] = i;
+  }
 
   for (var i = 0; i < table_data.length; ++i) {
     var model = table_data[i];
-
-    model['displaytitle'] = '<a href="' + 
-      model['url'] + '">' +
-      model['title'] +
-      '</a>';
-
-    if (model['detail']) {
-      model['displaytitle'] += '<br />' + model['detail'];
-    }
 
     // go through the column definitions and put the respective columns into their right place
     data.push(aoColumns.map(function(col) { 
@@ -92,3 +69,71 @@ function fetch_data_options() {
   return {aoColumns: aoColumns, aaData: data};
 }
 
+/*
+ * Automatically invoked every time the table is drawn - both on first draw
+ * as well as in response to filters.
+ */
+function fnDrawCallback(oSettings) {
+  var data = this.fnGetFilteredData();
+  
+  // convert the data into an array of meaningful points
+  var location_data = 
+    this.fnGetFilteredData().map(function(row) {
+        // these hard-coded column indices sucks
+        return { 
+          location: row[colNumLookup['hqcity']] + ',' + row[colNumLookup['hqstate']], // city,state - precisely
+          title: row[0]
+        };
+      });
+    
+  // defer execution until current call stack is out, to give time
+  // for the map to be created
+  setTimeout(function () {
+      plot_points(location_data);
+    },0);
+}
+
+/*
+ * This is called after each row is rendered. Basically, we trash the existing
+ * columns and custom render a new row more conducive to a list-view.
+ * CSS is used to hide the remaining columns.
+ */
+function fnCreatedRow( nRow, aData, iDataIndex ) {
+  // private helper function to avoid hard-coding column indices
+  function v(field) {
+    return aData[colNumLookup[field]];
+  }
+
+  function vhtml(field) {
+    var f = aData[colNumLookup[field]];
+    if (!f || f == 'None') {
+      return;
+    }
+    
+    return '<div><b>' + aoColumns[colNumLookup[field]]['sTitle'] +
+      '</b>: ' + f + '</div>';
+  }
+
+  var html = [];
+
+  // title
+  html.push('<h3>' +
+            '<a href="' + v('url') + '">' + v('title') + '</a>' +
+            '</h3>');
+
+  html.push('<span>' + v('detail') + '</span>');
+
+  // location
+  html.push('<span class="location">' + v('hqcity') + ', ' + v('hqstate') + '</span>');
+
+  // remaining fields
+  var fields = ['type', 'focus', 'blendedsubjects', 'programmodels', 'content', 'sis', 'othertools', 'indylms', 'indygradebook', 'indyassessment', 'lmssislink'];
+  for (var i = 0 ; i< fields.length; ++i) {
+    html.push(vhtml(fields[i]));
+  }
+
+    
+  // set it just to the first td in the row
+  $('td:eq(0)', nRow).empty().html(html.join(''));
+
+}

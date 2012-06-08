@@ -43,6 +43,7 @@ function initFilteredColumn(oSettings, iColumn) {
     });
     
     var colNameVar = oSettings.aoColumns[iColumn]['input'].replace(' ', '_').toLowerCase();
+
     var select = $('#filtered_' + colNameVar);
     // If there is no select, then create one - else use existing
     if (select.length == 0) {
@@ -59,9 +60,14 @@ function initFilteredColumn(oSettings, iColumn) {
 
     // register redrawing
     select.change(function() { oSettings.oInstance.fnDraw(); });
-    
+ 
     // styling and behavior for the multiselect plugin
-    select.multiselect({header: true,
+    select.select2({
+                   placeholder: oSettings.aoColumns[iColumn]['sTitle']
+          });
+
+    /*
+multiselect({header: true,
           selectedText: function(numchecked, total, checked) {
             return (numchecked == total) ? 'All' : 
               checked.map(function(x) { return x.title }).join(', ');
@@ -70,7 +76,7 @@ function initFilteredColumn(oSettings, iColumn) {
           checkAllText: "All",
           uncheckAllText: "None",
           height: "auto"});
-
+    */
     // This tells the filter which select to use
     oSettings.aoColumns[iColumn].filterSelect = select;
 

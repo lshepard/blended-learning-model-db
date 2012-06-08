@@ -10,17 +10,69 @@ body {
   text-align:left;
   margin: 20px;
 }
-table {
-  padding-top: 10px;
-  padding-bottom: 10px;
+
+/* Border between rows */
+table#models tr { border: 1px solid #ccc; }
+
+/* This magic hides the rest of the table, letting the first column 
+   represent the whole row (in JS, we write markup into the first column */
+
+#models th, td {
+  display: none;
 }
-table td {
-  font-size: 10px;
+
+table#models td:nth-of-type(1) {
+  display: block;
 }
+
+#models {
+  padding: 0;
+  width: 600px;
+}
+
+#wrap {
+ margin: 0 auto 0 0;
+ width: 1000px;
+}
+#filters {
+ margin: 0 auto;
+ float: left;
+ width: 200px;
+}
+#content {
+ width: 700px;
+ float: right;
+}
+
+#filters label {
+ display: block;
+ width: 100%;
+ padding: 5px;
+}
+
+#filters span {
+ display: none;
+}
+
+#filters select {
+ width: 250px;
+}
+
+a {
+  text-decoration: none;
+ color: #A6263F;
+}
+
+.location {
+          float: right;
+}
+
+table.dataTable tr.odd td.sorting_1 { background-color: #e59fac; }
+table.dataTable tr.even td.sorting_1 { background-color: #f9c3ce; }
 
 #map_canvas {
   margin: auto;
-  width: 70%;
+  width: 80%;
   height: 500px;
   padding: 15px;
 }
@@ -35,4 +87,10 @@ table td {
 
 #models_wrapper {
   padding-bottom: 20px;
+}
+
+// suggested in jquery docs to make maps work
+.ui-tabs .ui-tabs-hide {
+    position: absolute;
+    left: -10000px;
 }

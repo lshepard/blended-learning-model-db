@@ -29,8 +29,6 @@ function plot_points(models) {
     group_by_location[model.location].push(model);
   }
 
-  var bounds = new google.maps.LatLngBounds();
-
   for (var location_name in group_by_location) {
     var location = locations[location_name];
     if (!location) {
@@ -48,18 +46,28 @@ function plot_points(models) {
     var latLng = new google.maps.LatLng(location.lat,
                                         location.lng);
 
-    bounds.extend(latLng);
     make_marker(latLng, content);
   }
 
-  // zoom to fit
-  if (markers.length > 0) {
-    map.fitBounds(bounds);
-  }
+  fit_bounds();
+}
 
-  // we only have city-level accuracy, so don't zoom too close
-  if (map.getZoom() > 6) {
-    map.setZoom(6);
+function fit_bounds() {
+  if (markers.length > 0) {
+
+    var bounds = new google.maps.LatLngBounds();
+
+    for (var i = 0; i < markers.length; ++i) {
+      var latLng = markers[i].position;
+      bounds.extend(latLng);
+    }
+
+    map.fitBounds(bounds);
+
+    // we only have city-level accuracy, so don't zoom too close
+    if (map.getZoom() > 6) {
+      map.setZoom(6);
+    }
   }
 }
 
@@ -83,4 +91,9 @@ function make_marker(latLng, content) {
   markers.push(marker);
 
   return marker;
+}
+
+function resize_map() {
+  google.maps.event.trigger(map, "resize");
+  fit_bounds();
 }

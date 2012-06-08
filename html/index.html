@@ -6,12 +6,13 @@
 <link rel="stylesheet" type="text/css" href="datatables/media/css/jquery.dataTables.css" />
 <link rel="stylesheet" type="text/css" href="datatables/extras/ColVis/media/css/ColVis.css" />
 <link rel="stylesheet" type="text/css" href="css/style.css" />
+<link rel="stylesheet" type="text/css" href="select2/select2.css" />
 <link rel="stylesheet" type="text/css" href="css/jquery.multiselect.css" />
 <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/overcast/jquery-ui.css" />
 
 <script src="datatables/media/js/jquery.js"></script>
 <script src="datatables/media/js/jquery.dataTables.js"></script>
-<script src="datatables/extras/ColVis/media/js/ColVis.js"></script>
+<script src="select2/select2.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/datatable.js"></script>
 <script src="js/datatable_extensions.js"></script>
@@ -30,59 +31,92 @@
 <p>
 In 2011, the Innosight Institute wrote <a href="http://www.innosightinstitute.org/media-room/publications/education-publications/the-rise-of-k-12-blended-learning/">a widely read white paper</a> that summarized the ongoing state of blended learning in America. In conjunction with that white paper, the Institute has published a <a href="http://www.innosightinstitute.org/media-room/publications/blended-learning/blended-learning-profiles-all-profiles/">a list of fascinating case studies</a> of schools that have experimented with some form of blended learning.
 </p>
-<p>
-Use this tool to <b>filter</b> and <b>sort</b> through the case studies.
-</p>
-<p style="text-align:right">
-The code for this website is available <a href="https://github.com/lshepard/blended-learning-model-db">on Github</a>.
-</p>
 <hr />
 
-<div id="filter_form">
+<div id="wrap">
 
-<label for="filtered_hqstate">State</label>
-<select id="filtered_hqstate" multiple="multiple" ></select>
+<div id="filters">
 
-<label for="filtered_type">Type</label>
-<select id="filtered_type" multiple="multiple" ></select>
+<label>
+ <span>State</span>
+ <select id="filtered_hqstate" multiple="multiple" ></select>
+</label>
 
-<label for="filtered_focus">Focus</label>
-<select id="filtered_focus" multiple="multiple" ></select>
+<label>
+ <span>Type</span>
+ <select id="filtered_type" multiple="multiple" ></select>
+</label>
 
-<label for="filtered_blendedsubjects">Subjects</label>
-<select id="filtered_blendedsubjects" multiple="multiple" ></select>
+<label>
+ <span>Focus</span>
+ <select id="filtered_focus" multiple="multiple" ></select>
+</label>
 
-<label for="filtered_programmodels">Program Models</label>
-<select id="filtered_programmodels" multiple="multiple" ></select>
+<label>
+ <span>Subjects</span>
+ <select id="filtered_blendedsubjects" multiple="multiple" ></select>
+</label>
 
-<label for="filtered_content">Content Providers</label>
-<select id="filtered_content" multiple="multiple" ></select>
+<label>
+ <span>Program Models</span>
+ <select id="filtered_programmodels" multiple="multiple" ></select>
+</label>
+ 
 
-<label for="filtered_sis">Student Information System</label>
-<select id="filtered_sis" multiple="multiple" ></select>
+<label>
+ <span>Content Providers</span>
+ <select id="filtered_content" multiple="multiple" ></select>
+</label>
 
-<label for="filtered_othertools">Other Tools</label>
-<select id="filtered_othertools" multiple="multiple" ></select>
+<label>
+ <span>Student Information System</span>   
+ <select id="filtered_sis" multiple="multiple" ></select>
+</label>
 
-<label for="filtered_indygradebook">Gradebook</label>
-<select id="filtered_indygradebook" multiple="multiple" ></select>
+<label>
+ <span>Other Tools</span>
+ <select id="filtered_othertools" multiple="multiple" ></select>
+</label>
 
-<label for="filtered_indylms">LMS</label>
-<select id="filtered_indylms" multiple="multiple" ></select>
+<label>
+ <span>Gradebook</span>
+ <select id="filtered_indygradebook" multiple="multiple" ></select>
+</label>
 
-<label for="filtered_indyassessment">Assessment</label>
-<select id="filtered_indyassessment" multiple="multiple" ></select>
+<label>
+ <span>LMS</span>
+ <select id="filtered_indylms" multiple="multiple" ></select>
+</label>
 
-<label for="filtered_lmssislink">LMS/SIS Link</label>
-<select id="filtered_lmssislink" multiple="multiple" ></select><br />
+<label>
+ <span>Assessment</span>
+ <select id="filtered_indyassessment" multiple="multiple" ></select>
+</label>
+
+<label>
+ <span>LMS/SIS Link</span>
+ <select id="filtered_lmssislink" multiple="multiple" ></select>
+</label>
 
 </div>
 
-<table id="models"></table>
+<div id="content">
+  <div id="tabs">
+    <ul>
+     <li><a href="#tabs-1">Table</a></li>
+     <li><a href="#tabs-2">Map</a></li>
+    </ul>
 
-<a id="show_hide_map" class="show_hide_link" ></a>
-<div id="map_canvas"></div>
+   <div id="tabs-1">
+     <table id="models"></table>
+   </div>
+   <div id="tabs-2">
+     <div id="map_canvas"></div>
+   </div>
+  </div>
+</div>
 
+</div>
 <script>
   $(document).ready(function() {
     init_ui();
