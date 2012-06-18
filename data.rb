@@ -23,7 +23,7 @@ end
 #   limit      - max number of items to return
 get '/schools.json' do
   # todo: need to do this more "heroku-y"
-  client = Mysql2::Client.new(:database => "test")
+  client = Mysql2::Client.new()
 
   term = params[:q].split
   limit = params[:limit].to_i;
