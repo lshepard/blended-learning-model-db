@@ -22,9 +22,11 @@ end
 #   term       - search term
 #   limit      - max number of items to return
 get '/schools.json' do
-  # todo: need to do this more "heroku-y"
-  client = Mysql2::Client.new()
+  # this sucks becasue it bypasses database.yml, doesn't use a local db, etc.
+  # but oh well, want this to work so figure out how to do this later
 
+  client = Mysql2::Client.new(:host => "us-cdbr-east.cleardb.com", :username => "553fbf15237f5f", :password => "7f144efa", :database => "heroku_c8050d70c833c4c")
+ 
   term = params[:q].split
   limit = params[:limit].to_i;
 
