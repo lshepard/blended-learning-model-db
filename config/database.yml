@@ -5,3 +5,7 @@ development:
 
 production:
   adapter: mysql2
+  host: us-cdbr-east.cleardb.com
+  username: 553fbf15237f5f
+  password: 7f144efa
+  database: heroku_c8050d70c833c4c
