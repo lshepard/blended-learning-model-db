@@ -55,7 +55,7 @@ function initFilteredColumn(oSettings, iColumn) {
     }
 
     for (var i = 0 ; i < options.length; ++i) {
-      select.append(new Option(options[i].value, options[i].key, true));
+      select.append(new Option(options[i].value, options[i].key));
     }
 
     // register redrawing

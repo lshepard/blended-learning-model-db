@@ -1,15 +1,58 @@
-p {
- text-align: left;
-  padding-left: 20px;
-  padding-right: 20px;
+/*
+ * Core page styles, copied from
+ * http://www.innosightinstitute.org/innosight/wp-content/themes/innosight/style.css
+ */
+
+body, h1, h2, h3, h4, h5, h6, address, blockquote, dd, dl, p, form{
+    margin: 0;
+    padding: 0;
 }
-body {
-  color:#1B1B1B;
-  font-family:Lucida Grande,Verdana,Lucida Sans Regular,Lucida Sans Unicode,Arial,Verdana,sans-serif;
-  font-size:13px;
-  text-align:left;
-  margin: 20px;
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #393733;
+    background-image: url(images/innosight_bg_gradient01.jpg);
+    background-repeat: repeat-x;
+    margin: 0px;
+    padding: 5px;
+    line-height: 14px;
+    overflow-x: hidden;
 }
+
+h1, h2, h3, h4, h5, h6{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: normal;
+}
+h2 {
+     line-height: 1em;
+    font-size: 15px;
+    font-weight: bold;
+         color: #B3274A;
+    padding: 0 0 15px;
+}
+
+a {
+    color: #A6263F;
+    text-decoration: underline;
+}
+a:hover {
+    color: #36C !important;
+}
+a:active {
+    color: #978562;
+}
+a:visited {
+    color: #393733;
+}
+
+
+/**
+ * Style of the "table" - really a list but it's implemented as a table to 
+ * allow use of DataTable JQuery plugin
+ * 
+ */
 
 /* Border between rows */
 table#models tr { border: 1px solid #ccc; }
@@ -30,9 +73,33 @@ table#models td:nth-of-type(1) {
   width: 600px;
 }
 
+div.model_row {
+  border: 1px black;
+  padding: 20px;
+  background: #eeeeee;
+}
+
+table.dataTable tr.odd td.sorting_1 { background-color: white; }
+table.dataTable tr.even td.sorting_1 { background-color: white; }
+
+.model_row .location {
+   float: right;
+}
+.model_row .model {
+   display: block;
+   font-weight: bold;
+}
+.model_row p {
+  padding: 10px;
+}
+
+/*
+ * Styling specific to the tabs and page layout.
+ */
+
 #wrap {
  margin: 0 auto 0 0;
- width: 1000px;
+ width: 970;
 }
 #filters {
  margin: 0 auto;
@@ -58,17 +125,8 @@ table#models td:nth-of-type(1) {
  width: 250px;
 }
 
-a {
-  text-decoration: none;
- color: #A6263F;
-}
 
-.location {
-          float: right;
-}
 
-table.dataTable tr.odd td.sorting_1 { background-color: #e59fac; }
-table.dataTable tr.even td.sorting_1 { background-color: #f9c3ce; }
 
 #map_canvas {
   margin: auto;

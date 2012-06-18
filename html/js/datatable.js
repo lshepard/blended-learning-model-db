@@ -33,8 +33,8 @@ function fetch_data_options() {
      {input: 'hqstate',           sTitle: 'State', bFilterable: true, sWidth: '100px'},
      {input: 'type',              sTitle: 'Type', bFilterable: true},
      {input: 'focus',             sTitle: 'Focus', bFilterable: true},
-     {input: 'blendedsubjects',   sTitle: 'Subjects', bFilterable: true},
-     {input: 'programmodels',     sTitle: 'Program Models', bFilterable: true},
+     {input: 'blendedsubjects',   sTitle: 'Blended subjects', bFilterable: true},
+     {input: 'programmodels',     sTitle: 'Blended-learning model', bFilterable: true},
      {input: 'postdate',          sTitle: 'Date Posted', 'sType': 'date'},
      {input: 'hqcity',            sTitle: 'City'},
      {input: 'gradesserved',      sTitle: 'Grades Served'},
@@ -104,34 +104,26 @@ function fnCreatedRow( nRow, aData, iDataIndex ) {
     return aData[colNumLookup[field]];
   }
 
-  function vhtml(field) {
-    var f = aData[colNumLookup[field]];
-    if (!f || f == 'None') {
-      return;
-    }
-    
-    return '<div><b>' + aoColumns[colNumLookup[field]]['sTitle'] +
-      '</b>: ' + f + '</div>';
-  }
-
   var html = [];
 
   // title
-  html.push('<h3>' +
-            '<a href="' + v('url') + '">' + v('title') + '</a>' +
-            '</h3>');
-
-  html.push('<span>' + v('detail') + '</span>');
-
+  html.push('<div class="model_row">');
+  
   // location
   html.push('<span class="location">' + v('hqcity') + ', ' + v('hqstate') + '</span>');
 
-  // remaining fields
-  var fields = ['type', 'focus', 'blendedsubjects', 'programmodels', 'content', 'sis', 'othertools', 'indylms', 'indygradebook', 'indyassessment', 'lmssislink'];
-  for (var i = 0 ; i< fields.length; ++i) {
-    html.push(vhtml(fields[i]));
-  }
+  html.push('<h2>' +
+            '<a href="' + v('url') + '">' + v('title') + '</a>' +
+            '</h2>');
 
+  html.push('<span class="model">' + v('programmodels') + '</span>');
+
+  html.push('<span class="grades"> Grades ' + v('blendedgrades') + '</span>');
+
+  //  html.push('<p>' + v('modeldescription') + '</p>');
+  html.push('<p> The face-to-face teacher never lectures. Students choose from a menu of online and other options for learning. Many students use online programs for certain subjects, with a face-to-face teacher providing as-needed help. </p>');
+
+  html.push('</div>');
     
   // set it just to the first td in the row
   $('td:eq(0)', nRow).empty().html(html.join(''));
