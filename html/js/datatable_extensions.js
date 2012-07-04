@@ -19,13 +19,16 @@ jQuery.fn.dataTableExt.oSort['formatted-num-desc'] = function(a,b) {
 /*
  * Populate and setup the columns that can be filtered.
  */
-function initFilteredColumn(oSettings, iColumn) {
+function initFilteredColumn(oSettings, iColumn, bSplitOnComma) {
   if (!oSettings.aoColumns[iColumn].filterSelect) {
 
     var deDupedOptions = {};
     for (var iRow = 0; iRow < oSettings.aoData.length; ++iRow) {
       var value = oSettings.aoData[iRow]._aData[iColumn];
-      var values = value.split(',');
+
+      // some columns, like the title, don't need to split on comma
+      var values = bSplitOnComma ? value.split(',') : [value];
+
       for (var i = 0; i < values.length; ++i) {
         // normalize - remove whitespace and lowercase
         var value = values[i];
@@ -96,14 +99,14 @@ $.fn.dataTableExt.afnFiltering.push
          continue;
        }
 
-       initFilteredColumn(oSettings, iColumn);
+       initFilteredColumn(oSettings, iColumn, columnSettings.bSplitOnComma);
        
        // pull the dropdown reference from the config
        var options = oSettings.aoColumns[iColumn].filterSelect[0].options;
        
        // get an object with keys for each comma-delimited element here
        // n^2 algo but each one should be really small so no big deal
-       var potential_matches = aData[iColumn].split(',');
+       var potential_matches = columnSettings.bSplitOnComma ? aData[iColumn].split(',') : [aData[iColumn]];
        
        var passedThisRound = true;
        for (var i = 0; i < options.length; ++i) {

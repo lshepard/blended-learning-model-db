@@ -43,7 +43,8 @@ class InnosightScraper
       
       # custom free text scraping
       result['programmodels'] = scrape(doc, '//div/p[strong[contains(.,"Program model:")]]/text()')
-      
+      result['modeldescription'] = scrape(doc, '//div/p[strong[contains(.,"Model description")]]/text()')
+
       # table scraping
       result['type']      = scrape_row(doc, 'Operator type')
       result['focus']     = scrape_row(doc, 'Focus')
@@ -132,12 +133,12 @@ end
 
 # first: scrape
 
-#innosight = InnosightScraper.new
-edsurge = EdSurgeScraper.new
+innosight = InnosightScraper.new
+#edsurge = EdSurgeScraper.new
 
 # this should be using the CLOUDANT_URL env variable, but i'm not sure how to get that on my local machine
 @db = CouchRest.database!("https://app4701148.heroku:oueLS2tF0oJjCCvIOk6xaHDi@app4701148.heroku.cloudant.com/example")
-#@db.delete!
-#@db.create!
-#@db.bulk_save(innosight.results)
-@db.bulk_save(edsurge.results)
+@db.delete!
+@db.create!
+@db.bulk_save(innosight.results)
+#@db.bulk_save(edsurge.results)

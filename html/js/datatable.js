@@ -27,29 +27,29 @@ function fetch_data_options() {
   var data = [];
 
   aoColumns =
-    [{input: 'title',             sTitle: 'Model', sWidth: '250px'},
+    [{input: 'title',             sTitle: 'School', bFilterable: true, bSplitOnComma: false, sWidth: '250px'},
      {input: 'detail',            sTitle: 'Detail'},
      {input: 'url',               sTitle: 'URL'},
      {input: 'hqstate',           sTitle: 'State', bFilterable: true, sWidth: '100px'},
-     {input: 'type',              sTitle: 'Type', bFilterable: true},
-     {input: 'focus',             sTitle: 'Focus', bFilterable: true},
-     {input: 'blendedsubjects',   sTitle: 'Blended subjects', bFilterable: true},
-     {input: 'programmodels',     sTitle: 'Blended-learning model', bFilterable: true},
+     {input: 'type',              sTitle: 'Type', bFilterable: true, bSplitOnComma: true},
+     {input: 'focus',             sTitle: 'Focus', bFilterable: true, bSplitOnComma: true},
+     {input: 'blendedsubjects',   sTitle: 'Blended subjects', bFilterable: true, bSplitOnComma: true},
+     {input: 'programmodels',     sTitle: 'Blended-learning model', bFilterable: true, bSplitOnComma: true},
      {input: 'postdate',          sTitle: 'Date Posted', 'sType': 'date'},
      {input: 'hqcity',            sTitle: 'City'},
-     {input: 'gradesserved',      sTitle: 'Grades Served'},
+     {input: 'gradesserved',      sTitle: 'Grades Served', bFilterable: true},
      {input: 'frl',               sTitle: '% Free or Reduced Lunch', 'sType': 'formatted-num'},
      {input: 'minority',          sTitle: '% Black/ or Hispanic', 'sType': 'formatted-num'},
      {input: 'revenueperpupil',   sTitle: 'Revenue per Pupil', 'sType': 'formatted-num'},
      {input: 'blendedgrades',     sTitle: 'Blended Grades'},
      {input: 'blendedenrollment', sTitle: 'Blended Enrollment', 'sType': 'formatted-num'},
-     {input: 'content',           sTitle: 'Content',bFilterable: true},
-     {input: 'sis',               sTitle: 'Student Information System', bFilterable: true},
-     {input: 'othertools',        sTitle: 'Other Tools', bFilterable: true},
-     {input: 'indylms',           sTitle: 'Independent LMS', bFilterable: true},
-     {input: 'indygradebook',     sTitle: 'Independent Gradebook Grades', bFilterable: true},
-     {input: 'indyassessment',    sTitle: 'Independent Assessment', bFilterable: true},
-     {input: 'lmssislink',        sTitle: 'LMS and SIS Link', 'sType': 'formatted-num', bFilterable: true}
+     {input: 'content',           sTitle: 'Content',bFilterable: true, bSplitOnComma: true},
+     {input: 'sis',               sTitle: 'Student Information System', bFilterable: true, bSplitOnComma: true},
+     {input: 'othertools',        sTitle: 'Other Tools', bFilterable: true, bSplitOnComma: true},
+     {input: 'indylms',           sTitle: 'Independent LMS', bFilterable: true, bSplitOnComma: true},
+     {input: 'indygradebook',     sTitle: 'Independent Gradebook Grades', bFilterable: true, bSplitOnComma: true},
+     {input: 'indyassessment',    sTitle: 'Independent Assessment', bFilterable: true, bSplitOnComma: true},
+     {input: 'lmssislink',        sTitle: 'LMS and SIS Link', 'sType': 'formatted-num', bFilterable: true, bSplitOnComma: true}
      ];
 
   // generate a reverse map from name to index
@@ -113,18 +113,16 @@ function fnCreatedRow( nRow, aData, iDataIndex ) {
   html.push('<span class="location">' + v('hqcity') + ', ' + v('hqstate') + '</span>');
 
   html.push('<h2>' +
-            '<a href="' + v('url') + '">' + v('title') + '</a>' +
+            '<a href="' + v('url') + '" target="_top">' + v('title') + '</a>' +
             '</h2>');
+
+  html.push('<span class="grades"> Grades ' + v('gradesserved') + '</span>');
 
   html.push('<span class="model">' + v('programmodels') + '</span>');
 
-  html.push('<span class="grades"> Grades ' + v('blendedgrades') + '</span>');
-
-  //  html.push('<p>' + v('modeldescription') + '</p>');
-  html.push('<p> The face-to-face teacher never lectures. Students choose from a menu of online and other options for learning. Many students use online programs for certain subjects, with a face-to-face teacher providing as-needed help. </p>');
 
   html.push('</div>');
-    
+
   // set it just to the first td in the row
   $('td:eq(0)', nRow).empty().html(html.join(''));
 
