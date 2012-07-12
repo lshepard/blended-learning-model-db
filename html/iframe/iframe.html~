@@ -26,8 +26,6 @@
 </head>
 <body>
 
-<h2>Blended-learning Database</h2>
-
 <p>
 Since 2011, Innosight Institute has collected <a href="http://www.innosightinstitute.org/media-room/publications/blended-learning/blended-learning-profiles-all-profiles/">profiles of emerging models of blended learning</a>. 
 Use this tool to search among profiled blended-learning programs according to different variables.
@@ -36,6 +34,11 @@ Use this tool to search among profiled blended-learning programs according to di
 <div id="wrap">
 
 <div id="filters">
+
+<label>
+ <span>School Name</span>
+ <select id="filtered_title" multiple="multiple" ></select>
+</label>
 
 <label>
  <span>State</span>
@@ -61,11 +64,15 @@ Use this tool to search among profiled blended-learning programs according to di
  <span>Program Models</span>
  <select id="filtered_programmodels" multiple="multiple" ></select>
 </label>
- 
 
 <label>
  <span>Content Providers</span>
  <select id="filtered_content" multiple="multiple" ></select>
+</label>
+
+<label>
+ <span>Grades Served</span>
+ <select id="filtered_gradesserved" multiple="multiple" ></select>
 </label>
 
 <label>
