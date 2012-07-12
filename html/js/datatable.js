@@ -2,11 +2,11 @@ var colNumLookup = {};
 var aoColumns; // global is terrible but needd for fnCreatedRow for now
 
 /*
- * Initialize the data table options and the initial seed data.
+ * Initialize the data table with all data, options, and extensions configured.
  */
 function init_table() {
   
-  var options = fetch_data_options();
+  var options = fnGetColumnsAndData();
   options['sErrMode'] = 'throw';
 
   // Remove the option to choose a pagination length
@@ -17,13 +17,19 @@ function init_table() {
   options['fnDrawCallback'] = fnDrawCallback;
   options['fnCreatedRow'] = fnCreatedRow;
 
+  $.fn.dataTableExt.afnFiltering.push(fnFilterRow);
+
   // create and draw the table
   $('#models').dataTable(options);
 }
 
-// Convert from the incoming JSON hash
-// to the nested array structure that DataTable expects
-function fetch_data_options() {
+/*
+ * This method defines the columns and attributes, and converts
+ * the data in innosight.json into a format that DataTable expects.
+ * 
+ * Returns an object with keys aoColumns and aaData.
+ */
+function fnGetColumnsAndData() {
   var data = [];
 
   aoColumns =
@@ -52,21 +58,24 @@ function fetch_data_options() {
      {input: 'lmssislink',        sTitle: 'LMS and SIS Link', 'sType': 'formatted-num', bFilterable: true, bSplitOnComma: true}
      ];
 
-  // generate a reverse map from name to index
+  // DataTable depends on ordered columns, but we want to have the flexibility to refer
+  // to particular columns without worrying about their position, so we generate a reverse map
+  // from column name to its index
   for (var i = 0; i < aoColumns.length; ++i) {
     colNumLookup[aoColumns[i].input] = i;
   }
 
   for (var i = 0; i < table_data.length; ++i) {
     var model = table_data[i];
-
-    // go through the column definitions and put the respective columns into their right place
     data.push(aoColumns.map(function(col) { 
-          return model[col.input] ? model[col.input] : ''; 
+        return model[col.input] ? model[col.input] : ''; 
     }));
   }
 
-  return {aoColumns: aoColumns, aaData: data};
+  return {
+    aoColumns: aoColumns,
+    aaData: data
+  };
 }
 
 /*
@@ -126,4 +135,157 @@ function fnCreatedRow( nRow, aData, iDataIndex ) {
   // set it just to the first td in the row
   $('td:eq(0)', nRow).empty().html(html.join(''));
 
+}
+
+
+/*
+ * Populate and setup the columns that can be filtered.
+ */
+function initFilteredColumn(oSettings, iColumn, bSplitOnComma) {
+  if (!oSettings.aoColumns[iColumn].filterSelect) {
+
+    var deDupedOptions = {};
+    for (var iRow = 0; iRow < oSettings.aoData.length; ++iRow) {
+      var value = oSettings.aoData[iRow]._aData[iColumn];
+
+      // some columns, like the title, don't need to split on comma
+      var values = bSplitOnComma ? value.split(',') : [value];
+
+      for (var i = 0; i < values.length; ++i) {
+        // normalize - remove whitespace and lowercase
+        var value = values[i];
+        key = value.replace(/^\s+|\s+$/g,"").toLowerCase();
+        deDupedOptions[key] = {value: value, 
+                               key: key};
+      }
+    }
+    var options = [];
+    for (var key in deDupedOptions) {
+      options.push(deDupedOptions[key]);
+    }
+    options.sort(function(a, b) {
+        return a.value > b.value ? 1 : ( a.value === b.value ? 0 : -1 );
+    });
+    
+    var colNameVar = oSettings.aoColumns[iColumn]['input'].replace(' ', '_').toLowerCase();
+
+    var select = $('#filtered_' + colNameVar);
+    // If there is no select, then create one - else use existing
+    if (select.length == 0) {
+      console.error('Could not find #filtered_' + colNameVar + ', creating');
+      select = $('<select multiple="multiple" />');
+      var container = $('<div class="ui-multiselect"/>');
+      container.append(select);
+      $(oSettings.aoColumns[iColumn].nTh).append(container);
+    }
+
+    for (var i = 0 ; i < options.length; ++i) {
+      select.append(new Option(options[i].value, options[i].key));
+    }
+
+    // register redrawing
+    select.change(function() { oSettings.oInstance.fnDraw(); });
+ 
+    // styling and behavior for the multiselect plugin
+    select.select2({
+                   placeholder: oSettings.aoColumns[iColumn]['sTitle']
+          });
+
+    // This tells the filter which select to use
+    oSettings.aoColumns[iColumn].filterSelect = select;
+
+  }
+} 
+
+
+// add filter dropdown here
+// this code is terrible as of yet
+function fnFilterRow (oSettings, aData, iDataIndex) {
+  for (var iColumn = 0; iColumn < oSettings.aoColumns.length; ++iColumn) {
+    // check to see if the column supports this
+    columnSettings = oSettings.aoColumns[iColumn];
+    
+    if (!columnSettings.bFilterable) {
+      continue;
+    }
+    
+    initFilteredColumn(oSettings, iColumn, columnSettings.bSplitOnComma);
+    
+    // pull the dropdown reference from the config
+    var options = oSettings.aoColumns[iColumn].filterSelect[0].options;
+    
+    // get an object with keys for each comma-delimited element here
+    // n^2 algo but each one should be really small so no big deal
+    var potential_matches = columnSettings.bSplitOnComma ? aData[iColumn].split(',') : [aData[iColumn]];
+    
+    var passedThisRound = true;
+    for (var i = 0; i < options.length; ++i) {
+      if (options[i].selected) {
+        passedThisRound = false;
+        // now look through all the objects in split
+        for (var j = 0; j < potential_matches.length; ++j) {
+          if (potential_matches[j].toLowerCase().indexOf(options[i].value) != -1) {
+            passedThisRound = true;
+            break;
+          }
+        }
+        if (passedThisRound) {
+          break;
+        }
+      }
+    }
+    if (passedThisRound) {
+      continue;
+    } else {
+      return false;
+    }
+  }
+  return true;
+}
+
+
+/********************
+
+ THIRD PARTY PLUGINS
+
+ These useful functions come verbatim from the Datatable forums and docs.
+
+ ********************/
+
+/*
+ * This plug-in will provide numeric sorting for numeric columns 
+ * which have extra formatting, such as thousands seperators, 
+ * currency symobols or any other non-numeric data.
+ *
+ * Copied from http://datatables.net/plug-ins/sorting
+ * Author: Allan Jardine
+ */
+jQuery.fn.dataTableExt.oSort['formatted-num-asc'] = function(a,b) {
+  /* Remove any formatting */
+  var x = a.match(/\d/) ? a.replace( /[^\d\-\.]/g, "" ) : 0;
+  var y = b.match(/\d/) ? b.replace( /[^\d\-\.]/g, "" ) : 0;
+      
+  /* Parse and return */
+  return parseFloat(x) - parseFloat(y);
+};
+jQuery.fn.dataTableExt.oSort['formatted-num-desc'] = function(a,b) {
+  var x = a.match(/\d/) ? a.replace( /[^\d\-\.]/g, "" ) : 0;
+  var y = b.match(/\d/) ? b.replace( /[^\d\-\.]/g, "" ) : 0;
+      
+  return parseFloat(y) - parseFloat(x);
+};
+
+/*
+ * Retrieves the full set of data with current filters applied (not
+ * just the current page). This is needed for the map view.
+ * 
+ * Source: http://datatables.net/forums/discussion/1029/fngetfiltereddata/p1
+ * Author: mikej
+ */
+$.fn.dataTableExt.oApi.fnGetFilteredData = function ( oSettings ) {
+  var a = [];
+  for ( var i=0, iLen=oSettings.aiDisplay.length ; i<iLen ; i++ ) {
+    a.push(oSettings.aoData[ oSettings.aiDisplay[i] ]._aData);
+  }
+  return a;
 }

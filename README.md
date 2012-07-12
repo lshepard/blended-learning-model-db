@@ -41,25 +41,37 @@ snappy interface. We initially scrape the data from the Innosight webpage using 
 Javascript (View)
 -----------------
 
-/html
-  /iframe/iframe.html - main static page to be embedded in Wordpress site
-  /index.html - proxy page for use in testing
-  /datatables - DataTable, an open source Javascript library for filtering/sorting/displaying data
-  /select2    - Select2, an open source Javascript library that provides dropdowns
-  /js - custom Javascript that powers the app
+The app is mainly just a few open source libraries glued together, with some customized
+adapters.
+
+I'm using a few third-party libraries to make this whole thing easier.
+
+ - DataTables (located in html/js/datatables). This library is designed to
+   display tabular data and allows for a very configurable filtering, sorting.
+   The display is customized to show just the first column, but all the underlying
+   management of data is still done with this library.
+
+   My modifications are in html/js/datatables.js.
+
+ - Select2 (located in html/js/select2). Bad-ass open source library for
+   the dropdowns.
+
+ - Google Maps (adapter in html/js/maps.js). For mapping the show. Geolocation
+   is done in batch in bin/perl/geolocate.pl.
 
 
 Data Processing (Model)
 -----------------------
 
-To scrape the site into the database, run the following:
+The info from the Innosight data is scraped into a CloudDB key/value database hosted by
+Cloudant. To repopulate the database from scratch, run the following:
 
   bin/scrape.rb
 
 That will download all the data fresh from Innosight and dump it into a Cloudant database associated
 with my Heroku account.
 
-To view the contents of the database, visit the following page in your browser:
+To view the contents, visit the following page in your browser (this is what the JS app uses):
 
   http://localhost:5000/data/innosight.json
 
