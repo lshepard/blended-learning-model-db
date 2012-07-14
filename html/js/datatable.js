@@ -49,7 +49,7 @@ function fnGetColumnsAndData() {
      {input: 'revenueperpupil',   sTitle: 'Revenue per Pupil', 'sType': 'formatted-num'},
      {input: 'blendedgrades',     sTitle: 'Blended Grades'},
      {input: 'blendedenrollment', sTitle: 'Blended Enrollment', 'sType': 'formatted-num'},
-     {input: 'content',           sTitle: 'Content',bFilterable: true, bSplitOnComma: true},
+     {input: 'content',           sTitle: 'Content'},
      {input: 'sis',               sTitle: 'Student Information System'},
      {input: 'othertools',        sTitle: 'Other Tools'},
      {input: 'indylms',           sTitle: 'Independent LMS'},
