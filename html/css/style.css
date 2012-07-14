@@ -126,6 +126,9 @@ table.dataTable tr.even td.sorting_1 { background-color: white; }
 }
 
 
+.select2-container-multi .select2-choices .select2-search-field input {
+  color: black !important;
+}
 
 
 #map_canvas {

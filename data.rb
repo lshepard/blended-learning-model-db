@@ -10,8 +10,13 @@ require 'mysql2'
 
 get '/innosight.json' do
   @db = CouchRest.database("https://app4701148.heroku:oueLS2tF0oJjCCvIOk6xaHDi@app4701148.heroku.cloudant.com/example")
-  data = @db.all_docs({include_docs:true})['rows'].map {|r| r['doc'].reject{|key,value| key.match(/^_/)}}
+  data = @db.all_docs({include_docs:true})['rows']
+  # remove the non-data rows, such as design docs
+  data.select! {|r| !r['id'].match(/^_/)}
 
+  # remove the clouddb-specific keys, like _id and _rev
+  data.map! {|r| r['doc'].reject{|key,value| key.match(/^_/)}}
+  
   # print response
   cache_control :public, :max_age => 600
   content_type 'application/json'

@@ -1,5 +1,5 @@
 var colNumLookup = {};
-var aoColumns; // global is terrible but needd for fnCreatedRow for now
+var aoColumns; // global is terrible but need this for fnCreatedRow for now
 
 /*
  * Initialize the data table with all data, options, and extensions configured.
@@ -50,12 +50,13 @@ function fnGetColumnsAndData() {
      {input: 'blendedgrades',     sTitle: 'Blended Grades'},
      {input: 'blendedenrollment', sTitle: 'Blended Enrollment', 'sType': 'formatted-num'},
      {input: 'content',           sTitle: 'Content',bFilterable: true, bSplitOnComma: true},
-     {input: 'sis',               sTitle: 'Student Information System', bFilterable: true, bSplitOnComma: true},
-     {input: 'othertools',        sTitle: 'Other Tools', bFilterable: true, bSplitOnComma: true},
-     {input: 'indylms',           sTitle: 'Independent LMS', bFilterable: true, bSplitOnComma: true},
-     {input: 'indygradebook',     sTitle: 'Independent Gradebook Grades', bFilterable: true, bSplitOnComma: true},
-     {input: 'indyassessment',    sTitle: 'Independent Assessment', bFilterable: true, bSplitOnComma: true},
-     {input: 'lmssislink',        sTitle: 'LMS and SIS Link', 'sType': 'formatted-num', bFilterable: true, bSplitOnComma: true}
+     {input: 'sis',               sTitle: 'Student Information System'},
+     {input: 'othertools',        sTitle: 'Other Tools'},
+     {input: 'indylms',           sTitle: 'Independent LMS'},
+     {input: 'indygradebook',     sTitle: 'Independent Gradebook Grades'},
+     {input: 'indyassessment',    sTitle: 'Independent Assessment'},
+     {input: 'lmssislink',        sTitle: 'LMS and SIS Link'},
+     {input: 'alltools',          sTitle: 'Tools', bFilterable: true, bSplitOnComma:true}
      ];
 
   // DataTable depends on ordered columns, but we want to have the flexibility to refer
@@ -67,9 +68,23 @@ function fnGetColumnsAndData() {
 
   for (var i = 0; i < table_data.length; ++i) {
     var model = table_data[i];
-    data.push(aoColumns.map(function(col) { 
-        return model[col.input] ? model[col.input] : ''; 
-    }));
+    
+    var data_row = aoColumns.map(function(col) {
+        var t = model[col.input] ? model[col.input] : '';
+        t = t.replace(/K12, Inc/, "K12 Inc"); // normalize weird input
+        return t;
+      });
+
+    // aggregate all the tools fields into their own uber-list
+    // ideally, this would be already done in the JSON file (probably via map/reduce)
+    // but I don't have that working yet, so we do some custom stuff here
+    var alltools = [];
+    for (var field in {'content':1, 'sis':1, 'othertools':1, 'indylms':1, 'indygradebook':1, 'indyassessment':1, 'lmssislink':1}) {
+      alltools.push(data_row[colNumLookup[field]].split(/ *, */));
+    }
+    data_row[colNumLookup['alltools']] = alltools.join(', ');
+
+    data.push(data_row);
   }
 
   return {
@@ -149,7 +164,7 @@ function initFilteredColumn(oSettings, iColumn, bSplitOnComma) {
       var value = oSettings.aoData[iRow]._aData[iColumn];
 
       // some columns, like the title, don't need to split on comma
-      var values = bSplitOnComma ? value.split(',') : [value];
+      var values = bSplitOnComma ? value.split(/ *, */) : [value];
 
       for (var i = 0; i < values.length; ++i) {
         // normalize - remove whitespace and lowercase
@@ -188,14 +203,13 @@ function initFilteredColumn(oSettings, iColumn, bSplitOnComma) {
  
     // styling and behavior for the multiselect plugin
     select.select2({
-                   placeholder: oSettings.aoColumns[iColumn]['sTitle']
+        placeholder: 'Select ' + oSettings.aoColumns[iColumn]['sTitle'] + ' ...'
           });
 
     // This tells the filter which select to use
     oSettings.aoColumns[iColumn].filterSelect = select;
-
   }
-} 
+}
 
 
 // add filter dropdown here
