@@ -33,22 +33,22 @@ function fnGetColumnsAndData() {
   var data = [];
 
   aoColumns =
-    [{input: 'title',             sTitle: 'School', bFilterable: true, bSplitOnComma: false, sWidth: '250px'},
-     {input: 'detail',            sTitle: 'Detail'},
+    [{input: 'title',             sTitle: 'specific school', bFilterable: true, bSplitOnComma: false, sWidth: '250px'},
+     {input: 'detail',            sTitle: 'detail'},
      {input: 'url',               sTitle: 'URL'},
-     {input: 'hqstate',           sTitle: 'State', bFilterable: true, sWidth: '100px'},
-     {input: 'type',              sTitle: 'Type', bFilterable: true, bSplitOnComma: true},
-     {input: 'focus',             sTitle: 'Focus', bFilterable: true, bSplitOnComma: true},
-     {input: 'blendedsubjects',   sTitle: 'Blended subjects', bFilterable: true, bSplitOnComma: true},
-     {input: 'programmodels',     sTitle: 'Blended-learning model', bFilterable: true, bSplitOnComma: true},
-     {input: 'postdate',          sTitle: 'Date Posted', 'sType': 'date'},
-     {input: 'hqcity',            sTitle: 'City'},
-     {input: 'gradesserved',      sTitle: 'Grades Served', bFilterable: true},
+     {input: 'hqstate',           sTitle: 'state', bFilterable: true, sWidth: '100px'},
+     {input: 'type',              sTitle: 'type of school', bFilterable: true, bSplitOnComma: true},
+     {input: 'focus',             sTitle: 'focus', bFilterable: true, bSplitOnComma: true},
+     {input: 'blendedsubjects',   sTitle: 'blended subjects', bFilterable: true, bSplitOnComma: true},
+     {input: 'programmodels',     sTitle: 'blended-learning model', bFilterable: true, bSplitOnComma: true},
+     {input: 'postdate',          sTitle: 'date posted', 'sType': 'date'},
+     {input: 'hqcity',            sTitle: 'city'},
+     {input: 'gradesserved',      sTitle: 'grades served', bFilterable: true},
      {input: 'frl',               sTitle: '% Free or Reduced Lunch', 'sType': 'formatted-num'},
      {input: 'minority',          sTitle: '% Black/ or Hispanic', 'sType': 'formatted-num'},
-     {input: 'revenueperpupil',   sTitle: 'Revenue per Pupil', 'sType': 'formatted-num'},
-     {input: 'blendedgrades',     sTitle: 'Blended Grades'},
-     {input: 'blendedenrollment', sTitle: 'Blended Enrollment', 'sType': 'formatted-num'},
+     {input: 'revenueperpupil',   sTitle: 'revenue per pupil', 'sType': 'formatted-num'},
+     {input: 'blendedgrades',     sTitle: 'blended grades'},
+     {input: 'blendedenrollment', sTitle: 'blended enrollment', 'sType': 'formatted-num'},
      {input: 'content',           sTitle: 'Content'},
      {input: 'sis',               sTitle: 'Student Information System'},
      {input: 'othertools',        sTitle: 'Other Tools'},
@@ -56,7 +56,7 @@ function fnGetColumnsAndData() {
      {input: 'indygradebook',     sTitle: 'Independent Gradebook Grades'},
      {input: 'indyassessment',    sTitle: 'Independent Assessment'},
      {input: 'lmssislink',        sTitle: 'LMS and SIS Link'},
-     {input: 'alltools',          sTitle: 'Tools', bFilterable: true, bSplitOnComma:true}
+     {input: 'alltools',          sTitle: 'tools', bFilterable: true, bSplitOnComma:true}
      ];
 
   // DataTable depends on ordered columns, but we want to have the flexibility to refer
