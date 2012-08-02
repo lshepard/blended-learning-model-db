@@ -47,7 +47,6 @@ a:visited {
     color: #393733;
 }
 
-
 /**
  * Style of the "table" - really a list but it's implemented as a table to 
  * allow use of DataTable JQuery plugin
@@ -115,10 +114,6 @@ table.dataTable tr.even td.sorting_1 { background-color: white; }
  display: block;
  width: 100%;
  padding: 5px;
-}
-
-#filters span {
- display: none;
 }
 
 #filters select {
