@@ -118,9 +118,8 @@ table.dataTable tr.even td.sorting_1 { background-color: white; }
  width: 250px;
 }
 
-
 .select2-container-multi .select2-choices .select2-search-field input {
-/*  color: black !important;*/
+  color: black !important;
 }
 
 #map_canvas {
@@ -154,3 +153,12 @@ table.dataTable tr.even td.sorting_1 { background-color: white; }
 ul.select2-choices {
   background: url('dropdown.png') no-repeat right top !important;
 }
+
+.ui-slider .ui-slider-range {
+  background: #A6263F;
+}
+
+#gradesserved > span {
+  font-weight: bold;
+}
+

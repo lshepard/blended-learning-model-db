@@ -1,5 +1,7 @@
 var colNumLookup = {};
 var aoColumns; // global is terrible but need this for fnCreatedRow for now
+var datatable;
+var sliderMin, sliderMax;
 
 /*
  * Initialize the data table with all data, options, and extensions configured.
@@ -17,10 +19,50 @@ function init_table() {
   options['fnDrawCallback'] = fnDrawCallback;
   options['fnCreatedRow'] = fnCreatedRow;
 
-  $.fn.dataTableExt.afnFiltering.push(fnFilterRow);
+  $.fn.dataTableExt.afnFiltering.push(fnFilterSelects);
+  $.fn.dataTableExt.afnFiltering.push(fnFilterGradesServed);
+  
+
+  $('#gradesserved > div').slider({
+      range: true,
+        min: -1,
+        max: 12,
+        values: [-1, 12],
+        slide: onSliderChange});
 
   // create and draw the table
-  $('#models').dataTable(options);
+  datatable = $('#models').dataTable(options);
+}
+
+/*
+ * Populates the text of the grades served slider,
+ * and adjust the filter accordingly.
+ */
+function onSliderChange(event, ui) {
+  // update the text of display
+
+  function gradeNumberToString(numeric_grade) {
+    if (numeric_grade === -1) {
+      return "PreK";
+    } else if (numeric_grade === 0) {
+      return "K";
+    } else {
+      return numeric_grade;
+    }
+  }
+
+  sliderMin = ui.values[0];
+  sliderMax = ui.values[1];
+ 
+  var min = gradeNumberToString(sliderMin);
+  var max = gradeNumberToString(sliderMax);
+  text = (min == max) ? min : min + ' - ' + max;
+  $('#gradesserved > span').text(text);
+  
+  // update the results
+  setTimeout(function() {
+      datatable.fnDraw();
+    },0);
 }
 
 /*
@@ -33,7 +75,7 @@ function fnGetColumnsAndData() {
   var data = [];
 
   aoColumns =
-    [{input: 'title',             sTitle: 'specific school', bFilterable: true, bSplitOnComma: false, sWidth: '250px'},
+    [{input: 'title',             sTitle: 'school or organization', bFilterable: true, bSplitOnComma: false, sWidth: '250px'},
      {input: 'detail',            sTitle: 'detail'},
      {input: 'url',               sTitle: 'URL'},
      {input: 'hqstate',           sTitle: 'state', bFilterable: true, sWidth: '100px'},
@@ -43,7 +85,7 @@ function fnGetColumnsAndData() {
      {input: 'programmodels',     sTitle: 'blended-learning model', bFilterable: true, bSplitOnComma: true},
      {input: 'postdate',          sTitle: 'date posted', 'sType': 'date'},
      {input: 'hqcity',            sTitle: 'city'},
-     {input: 'gradesserved',      sTitle: 'grades served', bFilterable: true},
+     {input: 'gradesserved',      sTitle: 'grades served'},
      {input: 'frl',               sTitle: '% Free or Reduced Lunch', 'sType': 'formatted-num'},
      {input: 'minority',          sTitle: '% Black/ or Hispanic', 'sType': 'formatted-num'},
      {input: 'revenueperpupil',   sTitle: 'revenue per pupil', 'sType': 'formatted-num'},
@@ -149,9 +191,7 @@ function fnCreatedRow( nRow, aData, iDataIndex ) {
 
   // set it just to the first td in the row
   $('td:eq(0)', nRow).empty().html(html.join(''));
-
 }
-
 
 /*
  * Populate and setup the columns that can be filtered.
@@ -213,10 +253,11 @@ function initFilteredColumn(oSettings, iColumn, bSplitOnComma) {
   }
 }
 
-
-// add filter dropdown here
-// this code is terrible as of yet
-function fnFilterRow (oSettings, aData, iDataIndex) {
+/*
+ * Perform filtering for all rows marked as bFilterable. This applies
+ * only for the <select> dropdowns.
+ */
+function fnFilterSelects (oSettings, aData, iDataIndex) {
   for (var iColumn = 0; iColumn < oSettings.aoColumns.length; ++iColumn) {
     // check to see if the column supports this
     columnSettings = oSettings.aoColumns[iColumn];
@@ -257,6 +298,50 @@ function fnFilterRow (oSettings, aData, iDataIndex) {
     }
   }
   return true;
+}
+
+/*
+ * Grades served uses a slider, not a dropdown. This is a custom
+ * filtering function just for that value.
+ */
+function fnFilterGradesServed (oSettings, aData, iDataIndex) {
+
+  function gradeStringToNumber(string_grade) {
+    if (string_grade === 'PreK') {
+      return -1;
+    } else if (string_grade === "K") {
+      return 0;
+    } else {
+      return parseInt(string_grade);
+    }
+  }
+
+  // first, check if the slider is set to anything other than
+  // fully open
+
+  if ((!sliderMin && !sliderMax) ||
+      sliderMin == -1 && sliderMax == 12) {
+    return true; // all pass automatically when it's fully expanded
+  }
+
+  // otherwise, let's do the check
+
+  var gradesserved_raw = aData[colNumLookup['gradesserved']];
+
+  // convert the raw into numeric list, and compare with the
+  // values in the slider
+
+  var matches = gradesserved_raw.match(/(PreK|K|\d+)-(\d+)/);
+  if (!matches) {
+    return false;
+  }
+
+  var min = gradeStringToNumber(matches[1]);
+  var max = gradeStringToNumber(matches[2]);
+  
+  var filterpass = (min <= sliderMax && max >= sliderMin);
+  console.log(filterpass, "min", min, "max", max, "sliderMin", sliderMin, "sliderMax", sliderMax, aData[0]);
+  return filterpass;
 }
 
 
