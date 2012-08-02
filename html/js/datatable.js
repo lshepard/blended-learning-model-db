@@ -203,7 +203,9 @@ function initFilteredColumn(oSettings, iColumn, bSplitOnComma) {
  
     // styling and behavior for the multiselect plugin
     select.select2({
-        placeholder: 'Select ' + oSettings.aoColumns[iColumn]['sTitle'] + ' ...'
+        placeholder: 'Select ' + oSettings.aoColumns[iColumn]['sTitle'] + ' ...',
+          width: "100%",
+          containerCssClass: "select2-custom"
           });
 
     // This tells the filter which select to use

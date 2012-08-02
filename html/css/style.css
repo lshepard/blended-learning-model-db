@@ -12,8 +12,6 @@ body{
     font-family: Arial, Helvetica, sans-serif;
     font-size: 12px;
     color: #393733;
-    background-image: url(images/innosight_bg_gradient01.jpg);
-    background-repeat: repeat-x;
     margin: 0px;
     padding: 5px;
     line-height: 14px;
@@ -63,7 +61,7 @@ table#models tr { border: 1px solid #ccc; }
   display: none;
 }
 
-table#models td:nth-of-type(1) {
+table#models td:first-child {
   display: block;
 }
 
@@ -122,9 +120,8 @@ table.dataTable tr.even td.sorting_1 { background-color: white; }
 
 
 .select2-container-multi .select2-choices .select2-search-field input {
-  color: black !important;
+/*  color: black !important;*/
 }
-
 
 #map_canvas {
   margin: auto;
@@ -149,4 +146,11 @@ table.dataTable tr.even td.sorting_1 { background-color: white; }
 .ui-tabs .ui-tabs-hide {
     position: absolute;
     left: -10000px;
+}
+
+.select2-container-multi .select2-choices .select2-search-field input {
+  background: transparent !important;
+}
+ul.select2-choices {
+  background: url('dropdown.png') no-repeat right top !important;
 }

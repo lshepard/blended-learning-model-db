@@ -73,8 +73,10 @@ function fit_bounds() {
 
 function clear_markers() {
   for (i in markers) {
-    markers[i].setMap(null);
-    markers[i] = null;
+    if (markers.hasOwnProperty(i)) {
+      markers[i].setMap(undefined);
+      markers[i] = null;
+    }
   }
   markers = [];
 }
