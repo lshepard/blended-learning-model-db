@@ -42,8 +42,7 @@ function load_resources_and_then_init() {
     jQuery.getScript(js_prefix + '/select2/select2.js', function() {
         init_select2();
       });
-
-  });
+}
 
 /*
  * Configure and initialize the Select2 attribute itself. Any other initialization should
