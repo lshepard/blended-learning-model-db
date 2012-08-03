@@ -35,19 +35,40 @@ get '/schools.json' do
   term = params[:q].split
   limit = params[:limit].to_i;
 
-  biz_name_terms = params[:q].split(/\s/).map { |x| 
+  biz_name_terms = params[:q].split(/\s/).map { |x|
     "biz_name LIKE '%#{client.escape(x)}%'" }.
+    join(' AND ')
+
+  district_name_terms = params[:q].split(/\s/).map { |x|
+    "district_name LIKE '%#{client.escape(x)}%'" }.
+    join(' AND ')
+
+  cmo_name_terms = params[:q].split(/\s/).map { |x|
+    "cmo_name LIKE '%#{client.escape(x)}%'" }.
+    join(' AND ')
+
+  school_name_terms = params[:q].split(/\s/).map { |x|
+    "school_name LIKE '%#{client.escape(x)}%'" }.
     join(' AND ')
   
   results = client.query(
-    "  (SELECT id, biz_name, dist_name, e_city, e_state, grade_low, grade_high, 'Y' as public" +
+    "  (SELECT id, biz_name AS name, e_city, e_state, grade_low, grade_high, 'public' as type, 'Public School' as display_type" +
     "  FROM publicschools " +
     "  WHERE #{biz_name_terms}) " +
     "UNION " +
-    "  (SELECT id, biz_name, school_religion as dist_name, e_city, e_state, grade_low, grade_high, 'N' as public" +
+    "  (SELECT id, biz_name AS name, e_city, e_state, grade_low, grade_high, 'private' as type, school_type as display_type" +
     "  FROM privateschools " +
     "  WHERE #{biz_name_terms}) " +
-    "ORDER BY biz_name ASC " +
+    "UNION " +
+    "  (SELECT id, district_name AS name, e_city, e_state, '' AS grade_low, '' AS grade_high, 'district' as type, dist_type as display_type" +
+    "  FROM publicschooldistricts " +
+    "  WHERE #{district_name_terms}) " +
+    "UNION " +
+    "  (SELECT DISTINCT cmo_name as id, cmo_name as name, group_concat(concat(city,' ',state)) as e_city, '' as e_state, min(grade_low) AS grade_low, max(grade_high) AS grade_high, 'cmo' as type, 'Charter Management Organization' as display_type" +
+    "  FROM cmos " +
+    "  WHERE (#{cmo_name_terms}) OR (#{school_name_terms}) " +
+    "  GROUP BY cmo_name) " +
+    "ORDER BY name ASC " +
     "LIMIT #{limit}");
   
   data = []

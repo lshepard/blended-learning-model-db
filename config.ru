@@ -23,6 +23,6 @@ end
 
 require './data'
 map '/data' do
+  set :protection, :except => [:json_csrf]
   run Sinatra::Application
 end
-
