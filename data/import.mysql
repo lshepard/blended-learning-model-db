@@ -1,0 +1,171 @@
+DROP TABLE IF EXISTS privateschools;
+DROP TABLE IF EXISTS publicschools;
+DROP TABLE IF EXISTS publicschooldistricts;
+DROP TABLE IF EXISTS cmos;
+
+CREATE TABLE privateschools (
+ id                INT NOT NULL PRIMARY KEY,
+ biz_name          VARCHAR(255),
+ e_address         VARCHAR(255),
+ e_city            VARCHAR(255),
+ e_state           VARCHAR(255),
+ e_postal          VARCHAR(255),
+ e_zip_full        VARCHAR(255),
+ e_country         VARCHAR(255),
+ loc_county        VARCHAR(255),
+ loc_area_code     INT,
+ loc_FIPS          INT,
+ loc_MSA           INT,
+ loc_PMSA          INT,
+ loc_TZ            VARCHAR(255),
+ loc_DST           CHAR(1),
+ loc_LAT_centroid  INT,
+ loc_LAT_poly      INT,
+ loc_LONG_centroid INT,
+ loc_LONG_poly     INT,
+ biz_phone         VARCHAR(255),
+ grade_low         INT,
+ grade_high        INT,
+ school_days       INT,
+ school_hours      INT,
+ f_lib             CHAR(1),
+ enroll_ungraded   INT,
+ enroll_prek       INT,
+ enroll_k          INT,
+ enroll_1          INT,
+ enroll_2          INT,
+ enroll_3          INT,
+ enroll_4          INT,
+ enroll_5          INT,
+ enroll_6          INT,
+ enroll_7          INT,
+ enroll_8          INT,
+ enroll_9          INT,
+ enroll_10         INT,
+ enroll_11         INT,
+ enroll_12         INT,
+ enroll_total      INT,
+ school_coed       CHAR(1),
+ school_relig      CHAR(1),
+ school_religion   VARCHAR(255),
+ school_type       VARCHAR(255)
+);
+
+CREATE TABLE publicschools (
+ id                INT NOT NULL PRIMARY KEY,
+ biz_name          VARCHAR(255),
+ dist_name         VARCHAR(255),
+ e_address         VARCHAR(255),
+ e_city            VARCHAR(255),
+ e_state           VARCHAR(255),
+ e_postal          VARCHAR(255),
+ e_zip_full        VARCHAR(255),
+ e_country         VARCHAR(255),
+ school_county        VARCHAR(255),
+ loc_area_code     INT,
+ loc_FIPS          INT,
+ loc_MSA           INT,
+ loc_PMSA          INT,
+ loc_TZ            VARCHAR(255),
+ loc_DST           CHAR(1),
+ loc_LAT_centroid  INT,
+ loc_LAT_poly      INT,
+ loc_LONG_centroid INT,
+ loc_LONG_poly     INT,
+ biz_phone         VARCHAR(255),
+ s_district_id     INT,
+ grade_low         INT,
+ grade_high        INT,
+ loc_desc          INT,
+ flag_charter      CHAR(1),
+ flag_magnet       CHAR(1),
+ flag_title        CHAR(1),
+ flag_title_all    CHAR(1),
+ cnt_students      INT,
+ cnt_teachers      INT,
+ teach_ratio       FLOAT,
+ cnt_male          INT,
+ cnt_female        INT,
+ cnt_native        INT,
+ cnt_asian         INT,
+ cnt_black         INT,
+ cnt_hispanic      INT,
+ cnt_white         INT,
+ cnt_freelunch     INT,
+ cnt_reduced       INT
+);
+
+CREATE TABLE publicschooldistricts (
+ id                INT NOT NULL PRIMARY KEY,
+ s_district_id     INT,
+ s_state_id        INT,
+ district_name     VARCHAR(255),
+ e_address         VARCHAR(255),
+ e_city            VARCHAR(255),
+ e_state           VARCHAR(255),
+ e_postal          VARCHAR(255),
+ e_zip_full        VARCHAR(255),
+ e_country         VARCHAR(255),
+ loc_county        VARCHAR(255),
+ loc_area_code     INT,
+ loc_FIPS          INT,
+ loc_MSA           INT,
+ loc_PMSA          INT,
+ loc_TZ            VARCHAR(255),
+ loc_DST           CHAR(1),
+ loc_LAT_centroid  INT,
+ loc_LAT_poly      INT,
+ loc_LONG_centroid INT,
+ loc_LONG_poly     INT,
+ cnt_students      INT,
+ cnt_teachers      INT,
+ cnt_schools       INT,
+ info_setting      VARCHAR(255),
+ ratio_teach       FLOAT,
+ dist_type         VARCHAR(255),
+ biz_phone         VARCHAR(255)
+);
+
+
+CREATE TABLE cmos (
+ cmo_name          VARCHAR(255),
+ school_name       VARCHAR(255),
+ year_open         INT,
+ city              VARCHAR(255),
+ state             VARCHAR(255),
+ zip               INT,
+ grade_low         INT,
+ grade_high        INT
+);
+
+LOAD DATA LOCAL INFILE 'privateschools_1.0.2.csv'
+INTO TABLE privateschools
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(id,biz_name,e_address,e_city,e_state,e_postal,e_zip_full,e_country,loc_county,loc_area_code,loc_FIPS,loc_MSA,loc_PMSA,loc_TZ,loc_DST,loc_LAT_centroid,loc_LAT_poly,loc_LONG_centroid,loc_LONG_poly,biz_phone,grade_low,grade_high,school_days,school_hours,f_lib,enroll_ungraded,enroll_prek,enroll_k,enroll_1,enroll_2,enroll_3,enroll_4,enroll_5,enroll_6,enroll_7,enroll_8,enroll_9,enroll_10,enroll_11,enroll_12,enroll_total,school_coed,school_relig,school_religion,school_type);
+
+LOAD DATA LOCAL INFILE 'publicschools_1.0.3.csv'
+INTO TABLE publicschools
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(id,biz_name,dist_name,e_address,e_city,e_state,e_postal,e_zip_full,e_country,school_county,loc_area_code,loc_FIPS,loc_MSA,loc_PMSA,loc_TZ,loc_DST,loc_LAT_centroid,loc_LAT_poly,loc_LONG_centroid,loc_LONG_poly,biz_phone,s_district_id,grade_low,grade_high,loc_desc,flag_charter,flag_magnet,flag_title,flag_title_all,cnt_students,cnt_teachers,teach_ratio,cnt_male,cnt_female,cnt_native,cnt_asian,cnt_black,cnt_hispanic,cnt_white,cnt_freelunch,cnt_reduced);
+
+LOAD DATA LOCAL INFILE 'publicschooldistricts_1.0.5.csv'
+INTO TABLE publicschooldistricts
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(id,s_district_id,s_state_id,district_name,e_address,e_city,e_state,e_postal,e_zip_full,e_country,loc_county,loc_area_code,loc_FIPS,loc_MSA,loc_PMSA,loc_TZ,loc_DST,loc_LAT_centroid,loc_LAT_poly,loc_LONG_centroid,loc_LONG_poly,cnt_students,cnt_teachers,cnt_schools,info_setting,ratio_teach,dist_type,biz_phone);
+
+LOAD DATA LOCAL INFILE 'data_cmo_natldatabase_jun10.csv'
+INTO TABLE cmos
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(cmo_name,school_name,year_open,city,state,zip,grade_low,grade_high)
+
