@@ -1,0 +1,37 @@
+/* nothing yet */
+
+div.results_row {
+  padding-top: 3px;
+  border-bottom: 1px black;
+}
+
+.results_row span {
+  padding-top: 3px;
+  display: block;
+}
+
+.results_row span {
+  padding-left: 10px;
+  font-size: 125%;
+}
+
+.results_row span.entity_name {
+  font-size: large;
+  font-weight: bold;
+  padding-left: 0px;
+}
+
+.results_row span.entity_name {
+  font-size: large;
+  font-weight: bold;
+}
+
+.results_row span.type {
+  font-weight: bold;
+}
+/*
+ * make the dropdown longer than default
+ */
+.select2-results {
+  max-height: 500px;
+}
