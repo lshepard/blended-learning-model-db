@@ -1,6 +1,0 @@
-LOAD DATA LOCAL INFILE 'data_cmo_natldatabase_jun10.csv'
-INTO TABLE cmos
-FIELDS TERMINATED BY ','
-LINES TERMINATED BY '\r'
-IGNORE 1 LINES
-(cmo_name,school_name,year_open,city,state,zip,grade_low,grade_high)
