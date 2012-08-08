@@ -81,6 +81,7 @@ function fnGetColumnsAndData() {
      {input: 'hqstate',           sTitle: 'state', bFilterable: true, sWidth: '100px'},
      {input: 'type',              sTitle: 'type of school', bFilterable: true, bSplitOnComma: true},
      {input: 'focus',             sTitle: 'focus', bFilterable: true, bSplitOnComma: true},
+     {input: 'firstyear',         sTitle: 'first year of operation', bFilterable: true, bSplitOnComma: true},
      {input: 'blendedsubjects',   sTitle: 'blended subjects', bFilterable: true, bSplitOnComma: true},
      {input: 'programmodels',     sTitle: 'blended-learning model', bFilterable: true, bSplitOnComma: true},
      {input: 'postdate',          sTitle: 'date posted', 'sType': 'date'},
@@ -97,7 +98,7 @@ function fnGetColumnsAndData() {
      {input: 'indylms',           sTitle: 'Independent LMS'},
      {input: 'indygradebook',     sTitle: 'Independent Gradebook Grades'},
      {input: 'indyassessment',    sTitle: 'Independent Assessment'},
-     {input: 'lmssislink',        sTitle: 'LMS and SIS Link'},
+     {input: 'profdevel',         sTitle: 'Professional Development'},
      {input: 'alltools',          sTitle: 'tools', bFilterable: true, bSplitOnComma:true}
      ];
 
@@ -121,7 +122,7 @@ function fnGetColumnsAndData() {
     // ideally, this would be already done in the JSON file (probably via map/reduce)
     // but I don't have that working yet, so we do some custom stuff here
     var alltools = [];
-    for (var field in {'content':1, 'sis':1, 'othertools':1, 'indylms':1, 'indygradebook':1, 'indyassessment':1, 'lmssislink':1}) {
+    for (var field in {'content':1, 'sis':1, 'othertools':1, 'indylms':1, 'indygradebook':1, 'indyassessment':1, 'profdevel':1}) {
       alltools.push(data_row[colNumLookup[field]].split(/ *, */));
     }
     data_row[colNumLookup['alltools']] = alltools.join(', ');
@@ -326,7 +327,7 @@ function fnFilterGradesServed (oSettings, aData, iDataIndex) {
 
   // otherwise, let's do the check
 
-  var gradesserved_raw = aData[colNumLookup['gradesserved']];
+  var gradesserved_raw = aData[colNumLookup['blendedgrades']];
 
   // convert the raw into numeric list, and compare with the
   // values in the slider

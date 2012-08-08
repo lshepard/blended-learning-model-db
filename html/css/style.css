@@ -3,9 +3,13 @@
  * http://www.innosightinstitute.org/innosight/wp-content/themes/innosight/style.css
  */
 
-body, h1, h2, h3, h4, h5, h6, address, blockquote, dd, dl, p, form{
+body, h1, h2, h3, h4, h5, h6, address, blockquote, dd, dl, form{
     margin: 0;
     padding: 0;
+}
+
+h3 {
+  padding-bottom: 10px;
 }
 
 body{
@@ -96,12 +100,12 @@ table.dataTable tr.even td.sorting_1 { background-color: white; }
 
 #wrap {
  margin: 0 auto 0 0;
- width: 970;
+ width: 1000px;
 }
 #filters {
  margin: 0 auto;
  float: left;
- width: 200px;
+ width: 250px;
 }
 #content {
  width: 700px;
@@ -162,3 +166,7 @@ ul.select2-choices {
   font-weight: bold;
 }
 
+.slider {
+  width: 90%;
+  margin: auto;
+}

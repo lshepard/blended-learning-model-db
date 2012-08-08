@@ -46,9 +46,10 @@ class InnosightScraper
       result['modeldescription'] = scrape(doc, '//div/p[strong[contains(.,"Model description")]]/text()')
 
       # table scraping
-      result['type']      = scrape_row(doc, 'Operator type')
+      result['type']      = scrape_row(doc, 'Type')
       result['focus']     = scrape_row(doc, 'Focus')
       result['gradesserved']     = scrape_row(doc, 'Grades served')
+      result['firstyear']     = scrape_row(doc, 'First year of operation')
       result['frl']     = scrape_row(doc, '% FRL')
       result['minority']     = scrape_row(doc, '% Black or Hispanic')
       result['revenueperpupil']     = scrape_row(doc, 'Revenue per pupil')
@@ -60,7 +61,7 @@ class InnosightScraper
       result['indylms']     = scrape_row(doc, 'Independent LMS')
       result['indygradebook'] = scrape_row(doc, 'Independent gradebook')
       result['indyassessment'] = scrape_row(doc, 'Independent assessment tool')
-      result['lmssislink'] = scrape_row(doc, 'Link between LMS and SIS')
+      result['profdevel'] = scrape_row(doc, 'Professional development')
       result['othertools'] = scrape_row(doc, 'Other tools')
       
       puts " Processed " + result['title'] + "\n"
