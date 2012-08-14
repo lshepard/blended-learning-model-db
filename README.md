@@ -92,24 +92,30 @@ How to do common tasks
  
   A. Do the following:
 
-     1. Add the new field to the scraper at bin/scrape.rb. If it's nontrivial, then you can
-        use irb to figure out the right code to add.
+  1. Add the new field to the scraper at bin/scrape.rb. If it's nontrivial, then you can
+     use irb to figure out the right code to add.
 
-            result['newfield']     = scrape_row(doc, 'New Field')
+     ```javascript
+     result['newfield']     = scrape_row(doc, 'New Field')
+     ```
 
-     2. Run the scraper. That dumps the new field into the Cloudant DB.
+  2. Run the scraper. That dumps the new field into the Cloudant DB.
 
-            $ ruby bin/scrape.rb
+        $ ruby bin/scrape.rb
 
-     3. Modify the Datatable definition in html/js/datatable.js, add a line like this:
+  3. Modify the Datatable definition in html/js/datatable.js, add a line like this:
 
-            # will display "Select new field..." in textbox
-            {input: 'newfield',      sTitle: 'new field', bFilterable: true}, 
+     ```javascript
+     # will display "Select new field..." in textbox
+     {input: 'newfield',      sTitle: 'new field', bFilterable: true}, 
+     ```
 
-     4. Add the autocomplete widget along the side in html/iframe/iframe.html. If the id of the select
-        tag is "filtered_<fieldname>", then the Datatable init code will automatically create it.
-
-            <select id="filtered_newfield" multiple="multiple" ></select>
+  4. Add the autocomplete widget along the side in html/iframe/iframe.html. If the id of the select
+     tag is "filtered_<fieldname>", then the Datatable init code will automatically create it.
+    
+     ```html
+     <select id="filtered_newfield" multiple="multiple" ></select>
+     ```
 
 * Q. How do I make a custom filter (not a Select2 dropdown)?
 
