@@ -15,21 +15,21 @@ Getting Started
 
 You can run the app locally as follows
 
-1/ Install packages, and put the install paths in your path.
-   git           http://git-scm.com/downloads
-   heroku        https://toolbelt.heroku.com/
-   ruby 1.9.2    http://www.ruby-lang.org/en/downloads/
+1. Install packages, and put the install paths in your path.
+       git           http://git-scm.com/downloads
+       heroku        https://toolbelt.heroku.com/
+       ruby 1.9.2    http://www.ruby-lang.org/en/downloads/
 
-2/ Get the software
+2. Get the software
 
-  git clone blended-learning-model-db
+       git clone blended-learning-model-db
 
-3/ Start the webserver
+3. Start the webserver
 
-  cd blended-learning-model-db
-  foreman start
+       cd blended-learning-model-db
+       foreman start
 
-4/ In your browser, visit http://localhost:5000 to see it running.
+4. In your browser, visit http://localhost:5000 to see it running.
 
 Overview of technologies
 ========================
@@ -46,17 +46,17 @@ adapters.
 
 I'm using a few third-party libraries to make this whole thing easier.
 
- - DataTables (located in html/js/datatables). This library is designed to
+ - **DataTables** (located in html/js/datatables). This library is designed to
    display tabular data and allows for a very configurable filtering, sorting.
    The display is customized to show just the first column, but all the underlying
    management of data is still done with this library.
 
    My modifications are in html/js/datatables.js.
 
- - Select2 (located in html/js/select2). Bad-ass open source library for
+ - **Select2** (located in html/js/select2). Bad-ass open source library for
    the dropdowns.
 
- - Google Maps (adapter in html/js/maps.js). For mapping the show. 
+ - **Google Maps** (adapter in html/js/maps.js). For mapping the show. 
 
    Geocodes for current known locations are in html/js/data/geocodes.json. I had written
    a Perl script that generated that, but I deleted it, so you'll need to write
@@ -70,14 +70,14 @@ Data Processing (Model)
 The info from the Innosight data is scraped into a CloudDB key/value database hosted by
 Cloudant. To repopulate the database from scratch, run the following:
 
-  bin/scrape.rb
+    bin/scrape.rb
 
 That will download all the data fresh from Innosight and dump it into a Cloudant database associated
 with my Heroku account.
 
 To view the contents, visit the following page in your browser (this is what the JS app uses):
 
-  http://localhost:5000/data/innosight.json
+    http://localhost:5000/data/innosight.json
 
 
 How to do common tasks
@@ -90,24 +90,16 @@ How to do common tasks
 * Q. Innosight added some new data field. How do I add a new autocomplete textbox for it?
  
   A. Do the following:
-
      1. Add the new field to the scraper at bin/scrape.rb. If it's nontrivial, then you can
         use irb to figure out the right code to add.
-
             result['newfield']     = scrape_row(doc, 'New Field')
-
      2. Run the scraper. That dumps the new field into the Cloudant DB.
-
             $ ruby bin/scrape.rb
- 
      3. Modify the Datatable definition in html/js/datatable.js, add a line like this:
-
             # will display "Select new field..." in textbox
             {input: 'newfield',      sTitle: 'new field', bFilterable: true}, 
-
      4. Add the autocomplete widget along the side in html/iframe/iframe.html. If the id of the select
         tag is "filtered_<fieldname>", then the Datatable init code will automatically create it.
-
             <select id="filtered_newfield" multiple="multiple" ></select>
 
 * Q. How do I make a custom filter (not a Select2 dropdown)?
