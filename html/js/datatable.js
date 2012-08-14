@@ -75,7 +75,7 @@ function fnGetColumnsAndData() {
   var data = [];
 
   aoColumns =
-    [{input: 'title',             sTitle: 'school or organization', bFilterable: true, bSplitOnComma: false, sWidth: '250px'},
+    [{input: 'title',             sTitle: 'name', bFilterable: true, bSplitOnComma: false, sWidth: '250px'},
      {input: 'detail',            sTitle: 'detail'},
      {input: 'url',               sTitle: 'URL'},
      {input: 'hqstate',           sTitle: 'state', bFilterable: true, sWidth: '100px'},
@@ -99,7 +99,7 @@ function fnGetColumnsAndData() {
      {input: 'indygradebook',     sTitle: 'Independent Gradebook Grades'},
      {input: 'indyassessment',    sTitle: 'Independent Assessment'},
      {input: 'profdevel',         sTitle: 'Professional Development'},
-     {input: 'alltools',          sTitle: 'tools', bFilterable: true, bSplitOnComma:true}
+     {input: 'alltools',          sTitle: 'edtech tools', bFilterable: true, bSplitOnComma:true}
      ];
 
   // DataTable depends on ordered columns, but we want to have the flexibility to refer

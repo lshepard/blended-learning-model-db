@@ -79,7 +79,7 @@ class InnosightScraper
   end
   
   def scrape_row(doc, field)
-    node = doc.xpath('//td[.="' + field + '"]/following-sibling::td[1]')
+    node = doc.xpath('//td[.="' + field + '"]/following-sibling::td[1]').pop
     return node ? node.text.strip : nil 
   end
 end
