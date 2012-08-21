@@ -79,7 +79,7 @@ function fnGetColumnsAndData() {
      {input: 'detail',            sTitle: 'detail'},
      {input: 'url',               sTitle: 'URL'},
      {input: 'hqstate',           sTitle: 'state', bFilterable: true, sWidth: '100px'},
-     {input: 'type',              sTitle: 'type of school', bFilterable: true, bSplitOnComma: true},
+     {input: 'type',              sTitle: 'type', bFilterable: true, bSplitOnComma: true},
      {input: 'focus',             sTitle: 'focus', bFilterable: true, bSplitOnComma: true},
      {input: 'firstyear',         sTitle: 'first year of operation', bFilterable: true, bSplitOnComma: true},
      {input: 'blendedsubjects',   sTitle: 'blended subjects', bFilterable: true, bSplitOnComma: true},
