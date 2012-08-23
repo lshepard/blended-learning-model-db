@@ -209,7 +209,7 @@ function initFilteredColumn(oSettings, iColumn, bSplitOnComma) {
 
       for (var i = 0; i < values.length; ++i) {
         // normalize - remove whitespace and lowercase
-        var value = values[i];
+        var value = values[i].trim();
         key = value.replace(/^\s+|\s+$/g,"").toLowerCase();
         deDupedOptions[key] = {value: value, 
                                key: key};
@@ -390,4 +390,15 @@ $.fn.dataTableExt.oApi.fnGetFilteredData = function ( oSettings ) {
     a.push(oSettings.aoData[ oSettings.aiDisplay[i] ]._aData);
   }
   return a;
+}
+
+/*
+ * Ensure that String.trim is available.
+ */
+if(typeof(String.prototype.trim) === "undefined")
+{
+   String.prototype.trim = function() 
+   {
+     return String(this).replace(/^\s+|\s+$/g, '');
+   };
 }
