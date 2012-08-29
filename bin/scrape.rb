@@ -4,6 +4,7 @@ require 'couchrest'
 require 'nokogiri'
 require 'open-uri'
 require 'pp'
+require 'date'
 
 # Port of the original perl scraping script
 # As we add additional data sources, they should become their own classes
@@ -18,7 +19,7 @@ class InnosightScraper
     links = doc.css('div.entry > div > strong > p >a')
     puts "Found " + links.count.to_s + " blended learning profiles\n"
 
-    @results = []
+    @results = {}
     
     links.each {|link| 
       doc = Nokogiri::HTML(open(link['href']))
@@ -28,7 +29,7 @@ class InnosightScraper
           }
       
       # css scraping
-      result['title']     = scrape(doc, 'div.post > h2')
+      title = result['title']     = scrape(doc, 'div.post > h2')
       result['detail']    = scrape(doc, 'div.post > div.entry > p > span')
 
       # regexes for postdate and splitting out hq
@@ -65,12 +66,25 @@ class InnosightScraper
       result['othertools'] = scrape_row(doc, 'Other tools')
       
       puts " Processed " + result['title'] + "\n"
-      @results.push(result)
+      
+      # When Innosight updates a profile, they will actually create a new profile
+      # with the same name as the old one. We dedupe based on the post date - most recent
+      # one wins
+      if @results[title]
+        if (Date.parse(@results[title]['postdate']) > Date.parse(result['postdate']))
+          puts "  -- rejected " + result['title'] + "\n"
+          next
+        else
+          puts " -- overwrote previous " + result['title'] + "\n"
+        end
+      end
+
+      @results[result['title']] = result
     }
   end
 
   def results
-    @results
+    @results.values
   end
   
   def scrape(doc, search)
