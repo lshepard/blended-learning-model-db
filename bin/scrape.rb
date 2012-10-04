@@ -15,11 +15,15 @@ class InnosightScraper
 
   def initialize
     doc = Nokogiri::HTML(open(@@list_url))
-    links = doc.css('div.entry > div > strong > p >a')
+    links = doc.css('div.entry > div > strong > p > a')
     puts "Found " + links.count.to_s + " blended learning profiles\n"
 
     @results = []
     
+    # prime the cache, as we've had issues with bad data returns
+    links.each {|link| 
+       Nokogiri::HTML(open(link['href']));
+    }
     links.each {|link| 
       doc = Nokogiri::HTML(open(link['href']))
       result = {
@@ -131,15 +135,12 @@ class EdSurgeScraper
   end
 end
 
-
-# first: scrape
-
 innosight = InnosightScraper.new
-#edsurge = EdSurgeScraper.new
 
-# this should be using the CLOUDANT_URL env variable, but i'm not sure how to get that on my local machine
-@db = CouchRest.database!("https://app4701148.heroku:oueLS2tF0oJjCCvIOk6xaHDi@app4701148.heroku.cloudant.com/example")
-@db.delete!
-@db.create!
-@db.bulk_save(innosight.results)
-#@db.bulk_save(edsurge.results)
+if (innosight.results)
+  # this should be using the CLOUDANT_URL env variable, but i'm not sure how to get that on my local machine
+  @db = CouchRest.database!("https://app4701148.heroku:oueLS2tF0oJjCCvIOk6xaHDi@app4701148.heroku.cloudant.com/example")
+  @db.delete!
+  @db.create!
+  @db.bulk_save(innosight.results)
+end
