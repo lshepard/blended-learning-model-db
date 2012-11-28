@@ -11,20 +11,21 @@ class InnosightScraper
   @@list_url= 'http://www.innosightinstitute.org/media-room/publications/blended-learning/' +
     'blended-learning-profiles-all-profiles/'
 
-  @results = []
+  @results = {}
 
   def initialize
     doc = Nokogiri::HTML(open(@@list_url))
     links = doc.css('div.entry > div > strong > p > a')
     puts "Found " + links.count.to_s + " blended learning profiles\n"
 
-    @results = []
+    @results = {}
     
     # prime the cache, as we've had issues with bad data returns
     links.each {|link| 
        Nokogiri::HTML(open(link['href']));
     }
-    links.each {|link| 
+    links.each {|link|
+      begin
       doc = Nokogiri::HTML(open(link['href']))
       result = {
           'url' => link['href'],
@@ -69,12 +70,16 @@ class InnosightScraper
       result['othertools'] = scrape_row(doc, 'Other tools')
       
       puts " Processed " + result['title'] + "\n"
-      @results.push(result)
+      @results[result['title']] = result
+      rescue Exception => e
+        puts "Issue with #{link['href']} " + e.to_s + "\n"
+        raise e
+      end
     }
   end
 
   def results
-    @results
+    @results.values
   end
   
   def scrape(doc, search)
@@ -84,53 +89,6 @@ class InnosightScraper
   
   def scrape_row(doc, field)
     node = doc.xpath('//td[.="' + field + '"]/following-sibling::td[1]').pop
-    return node ? node.text.strip : nil 
-  end
-end
-
-# Port of the original perl scraping script
-# As we add additional data sources, they should become their own classes
-class EdSurgeScraper
-  @@list_url= 'https://www.edsurge.com/s'
-
-  @results = []
-
-  def initialize
-    doc = Nokogiri::HTML(open(@@list_url))
-    links = doc.css('div#index_show_objects > div.object_partial > a')
-    puts "Found " + links.count.to_s + " schools\n"
-
-    @results = []
-    
-    links.each {|link|
-      uri = URI.parse(@@list_url).merge(link['href']).to_s
-      doc = Nokogiri::HTML(open(uri))
-      result = {
-          'url' => uri,
-          'source' => 'edsurge'
-          }
-      
-      # css scraping
-      result['title']     = scrape(doc, 'div#md_n')
-      result['detail']    = scrape(doc, 'div#md_d')
-      
-      # arrays
-      result['desc']    = doc.search('div#basics_section > div > div > p')
-      result['products']    = doc.search('div#products * a')
-
-
-      puts " Processed " + result['title'] + "\n"
-      @results.push(result)
-      break
-    }
-  end
-
-  def results
-    @results
-  end
-  
-  def scrape(doc, search)
-    node = doc.search(search).pop
     return node ? node.text.strip : nil 
   end
 end
