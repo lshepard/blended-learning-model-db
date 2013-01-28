@@ -21,6 +21,7 @@ function init_table() {
 
   $.fn.dataTableExt.afnFiltering.push(fnFilterSelects);
   $.fn.dataTableExt.afnFiltering.push(fnFilterGradesServed);
+  $.fn.dataTableExt.afnFiltering.push(fnFilterFirstYear);
   
 
   $('#gradesserved > div').slider({
@@ -28,17 +29,49 @@ function init_table() {
         min: -1,
         max: 12,
         values: [-1, 12],
-        slide: onSliderChange});
+        slide: onGradesServedSliderChange});
+
+  $('#firstyear > div').slider({
+    range: true,
+    min: 1999,
+    max: 2013, // TODO: Update range from data
+    values: [1999, 2013],
+    slide: onFirstYearSliderChange
+  });
 
   // create and draw the table
   datatable = $('#models').dataTable(options);
+}
+
+var firstYearSliderMin,
+    firstYearSliderMax;
+
+function onFirstYearSliderChange(event, ui) {
+  var schoolYearToString = function(year) {
+    if (year == 1999) {
+      return "Before 2000";
+    }
+    return "SY" + year + "-" + new String(year + 1).slice(2,4);
+  };
+
+  firstYearSliderMin = ui.values[0];
+  firstYearSliderMax = ui.values[1];
+
+  var min = schoolYearToString(firstYearSliderMin),
+      max = schoolYearToString(firstYearSliderMax),
+      text = (min == max) ? min : min + ' - ' + max;
+
+  $('#firstyear > span').text(text);
+
+  // update the results
+  setTimeout(function() { datatable.fnDraw(); },0);
 }
 
 /*
  * Populates the text of the grades served slider,
  * and adjust the filter accordingly.
  */
-function onSliderChange(event, ui) {
+function onGradesServedSliderChange(event, ui) {
   // update the text of display
 
   function gradeNumberToString(numeric_grade) {
@@ -81,7 +114,8 @@ function fnGetColumnsAndData() {
      {input: 'hqstate',           sTitle: 'state', bFilterable: true, sWidth: '100px'},
      {input: 'type',              sTitle: 'type', bFilterable: true, bSplitOnComma: true},
      {input: 'focus',             sTitle: 'focus', bFilterable: true, bSplitOnComma: true},
-     {input: 'firstyear',         sTitle: 'first year of operation', bFilterable: true, bSplitOnComma: true},
+     // {input: 'firstyear',         sTitle: 'first year of operation', bFilterable: true, bSplitOnComma: true},
+     {input: 'firstyear',         sTitle: 'first year of operation'},
      {input: 'blendedsubjects',   sTitle: 'blended subjects', bFilterable: true, bSplitOnComma: true},
      {input: 'programmodels',     sTitle: 'blended-learning model', bFilterable: true, bSplitOnComma: true},
      {input: 'postdate',          sTitle: 'date posted', 'sType': 'date'},
@@ -184,6 +218,7 @@ function fnCreatedRow( nRow, aData, iDataIndex ) {
             '</h2>');
 
   html.push('<span class="grades"> Grades ' + v('gradesserved') + '</span>');
+  html.push('<span class="firstyear"> First year ' + v('firstyear') + '</span>');
 
   html.push('<span class="model">' + v('programmodels') + '</span>');
 
@@ -301,12 +336,38 @@ function fnFilterSelects (oSettings, aData, iDataIndex) {
   return true;
 }
 
+
+/*
+ * First year of operation uses a slider, not a dropdown. This is a custom
+ * filtering function just for that value.
+ */
+function fnFilterFirstYear(oSettings, aData, iDataIndex) {
+  if ((!firstYearSliderMin && !firstYearSliderMax) ||
+      firstYearSliderMin == 2000 && firstYearSliderMax == 2013) {
+    return true; // all pass automatically when it's fully expanded
+  }
+
+  // SY2012-13 -> 2012
+  var yearStringToNumber = function(yearString) {
+     // TODO cleanup data with trailing space "Before 2000 "
+    if (yearString.match(/Before 2000/)) {
+      return 1999;
+    }
+    return yearString.slice(2, 6);
+  }
+
+  var firstYearString = aData[colNumLookup['firstyear']],
+      firstYear = yearStringToNumber(firstYearString),
+      isFirstYearWithinRange = (firstYear >= firstYearSliderMin && firstYear <= firstYearSliderMax);
+
+  return isFirstYearWithinRange;
+}
+
 /*
  * Grades served uses a slider, not a dropdown. This is a custom
  * filtering function just for that value.
  */
 function fnFilterGradesServed (oSettings, aData, iDataIndex) {
-
   function gradeStringToNumber(string_grade) {
     if (string_grade === 'PreK') {
       return -1;

@@ -93,6 +93,9 @@ table.dataTable tr.even td.sorting_1 { background-color: white; }
 .model_row p {
   padding: 10px;
 }
+.model_row .firstyear {
+  display: block;
+}
 
 /*
  * Styling specific to the tabs and page layout.
@@ -163,6 +166,11 @@ ul.select2-choices {
 }
 
 #gradesserved > span {
+  font-weight: bold;
+}
+
+#firstyear > span {
+  display: block;
   font-weight: bold;
 }
 
