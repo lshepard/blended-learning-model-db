@@ -47,7 +47,7 @@ adapters.
 
 I'm using a few third-party libraries to make this whole thing easier.
 
- - **DataTables** (located in html/js/datatables). This library is designed to
+ - **DataTables** (source located in html/datatables). This library is designed to
    display tabular data and allows for a very configurable filtering, sorting.
    The display is customized to show just the first column, but all the underlying
    management of data is still done with this library.
