@@ -3,7 +3,7 @@
 # This code was ripped from https://devcenter.heroku.com/articles/static-sites-on-heroku
 
 use Rack::Static, 
-  :urls => ["/css", "/js", "/datatables", "/select2", "/intake", "/iframe"],
+  :urls => ["/css", "/js", "/datatables", "/select2", "/intake", "/iframe", "/images"],
   :root => "html"
 
 map '/' do

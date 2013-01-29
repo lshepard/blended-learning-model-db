@@ -100,7 +100,7 @@ table.dataTable tr.even td.sorting_1 { background-color: white; }
 
 #wrap {
  margin: 0 auto 0 0;
- width: 1000px;
+ width: 970px;
 }
 #filters {
  margin: 0 auto;
@@ -108,7 +108,7 @@ table.dataTable tr.even td.sorting_1 { background-color: white; }
  width: 250px;
 }
 #content {
- width: 700px;
+ width: 670px;
  float: right;
 }
 

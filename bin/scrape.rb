@@ -4,6 +4,7 @@ require 'couchrest'
 require 'nokogiri'
 require 'open-uri'
 require 'pp'
+require 'date'
 
 # Port of the original perl scraping script
 # As we add additional data sources, they should become their own classes
@@ -33,7 +34,7 @@ class InnosightScraper
           }
       
       # css scraping
-      result['title']     = scrape(doc, 'div.post > h2')
+      title = result['title']     = scrape(doc, 'div.post > h2')
       result['detail']    = scrape(doc, 'div.post > div.entry > p > span')
 
       # regexes for postdate and splitting out hq
@@ -69,8 +70,22 @@ class InnosightScraper
       result['profdevel'] = scrape_row(doc, 'Professional development')
       result['othertools'] = scrape_row(doc, 'Other tools')
       
+
+      # When Innosight updates a profile, they will actually create a new profile
+      # with the same name as the old one. We dedupe based on the post date - most recent
+      # one wins
+      if @results[title]
+        if (Date.parse(@results[title]['postdate']) > Date.parse(result['postdate']))
+          puts "  -- rejected " + result['title'] + "\n"
+          next
+        else
+          puts " -- overwrote previous " + result['title'] + "\n"
+        end
+      end
+
       puts " Processed " + result['title'] + "\n"
       @results[result['title']] = result
+
       rescue Exception => e
         puts "Issue with #{link['href']} " + e.to_s + "\n"
         raise e
