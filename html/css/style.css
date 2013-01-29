@@ -178,3 +178,12 @@ ul.select2-choices {
   width: 90%;
   margin: auto;
 }
+
+div.select2-hint {
+  cursor: pointer;
+  padding: 10px;
+  clear: both;
+  float: left;
+  font-weight: bold;
+  color: #A6263F;
+}
