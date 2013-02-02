@@ -70,7 +70,7 @@ class InnosightScraper
 
     if (/(.*), (.*)$/.match(scrape_row(doc, 'Headquarters')))
       result['hqcity'] = $1
-      result['hqstate'] = $2
+      result['hqstate'] = drop_trailing_parenthetical($2)
     end
 
     # custom free text scraping
@@ -125,6 +125,14 @@ class InnosightScraper
   def scrape_row(doc, field)
     node = doc.xpath('//td[.="' + field + '"]/following-sibling::td[1]').pop
     return node ? node.text.strip : nil 
+  end
+
+  def drop_trailing_parenthetical(string)
+    if string.nil?
+      nil
+    else
+      string.sub(/ \(.*\)$/, '')
+    end
   end
 end
 
