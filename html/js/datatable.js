@@ -381,7 +381,7 @@ function fnFilterSelects (oSettings, aData, iDataIndex) {
  */
 function fnFilterFirstYear(oSettings, aData, iDataIndex) {
   if ((!firstYearSliderMin && !firstYearSliderMax) ||
-      firstYearSliderMin == 2000 && firstYearSliderMax == 2013) {
+      firstYearSliderMin == 1999 && firstYearSliderMax == 2013) {
     return true; // all pass automatically when it's fully expanded
   }
 
