@@ -32,7 +32,7 @@ function plot_points(models) {
   for (var location_name in group_by_location) {
     var location = locations[location_name];
     if (!location) {
-      console.error("Missing geocode info for" , model);
+      // console.error("Missing geocode info for" , model);
       continue;
     }
 
