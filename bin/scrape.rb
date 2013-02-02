@@ -60,7 +60,7 @@ class InnosightScraper
     }
 
     # css scraping
-    title = result['title']     = scrape(doc, 'div.post > h2')
+    title = result['title']     = scrape(doc, 'div.post > h2') || scrape(doc, 'div.post > a.sh2')
     result['detail']    = scrape(doc, 'div.post > div.entry > p > span')
 
     # regexes for postdate and splitting out hq
