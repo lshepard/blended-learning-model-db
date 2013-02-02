@@ -440,7 +440,7 @@ function fnFilterGradesServed (oSettings, aData, iDataIndex) {
   var max = gradeStringToNumber(matches[2]);
   
   var filterpass = (min <= sliderMax && max >= sliderMin);
-  console.log(filterpass, "min", min, "max", max, "sliderMin", sliderMin, "sliderMax", sliderMax, aData[0]);
+  // console.log(filterpass, "min", min, "max", max, "sliderMin", sliderMin, "sliderMax", sliderMax, aData[0]);
   return filterpass;
 }
 
