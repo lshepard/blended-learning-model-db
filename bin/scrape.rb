@@ -20,10 +20,10 @@ class InnosightScraper
     puts "Found " + links.count.to_s + " blended learning profiles\n"
 
     @results = {}
-    
+
     # prime the cache, as we've had issues with bad data returns
     links.each {|link| 
-       Nokogiri::HTML(open(link['href']));
+      Nokogiri::HTML(open(link['href']));
     }
     links.each {|link|
       begin
@@ -36,75 +36,75 @@ class InnosightScraper
   end
 
   def scrape_link(link)
-      doc = Nokogiri::HTML(open(link['href']))
-      result = {
-          'url' => link['href'],
-          'source' => 'innosight'
-          }
-      
-      # css scraping
-      title = result['title']     = scrape(doc, 'div.post > h2')
-      result['detail']    = scrape(doc, 'div.post > div.entry > p > span')
+    doc = Nokogiri::HTML(open(link['href']))
+    result = {
+      'url' => link['href'],
+      'source' => 'innosight'
+    }
 
-      # regexes for postdate and splitting out hq
-      if (/Posted on (\S+ \d+)\S*(, \d+) by/.match(scrape(doc, 'div.post > div.postdate')))
-        result['postdate'] = $1 + $2
+    # css scraping
+    title = result['title']     = scrape(doc, 'div.post > h2')
+    result['detail']    = scrape(doc, 'div.post > div.entry > p > span')
+
+    # regexes for postdate and splitting out hq
+    if (/Posted on (\S+ \d+)\S*(, \d+) by/.match(scrape(doc, 'div.post > div.postdate')))
+      result['postdate'] = $1 + $2
+    end
+
+    if (/(.*), (.*)$/.match(scrape_row(doc, 'Headquarters')))
+      result['hqcity'] = $1
+      result['hqstate'] = $2
+    end
+
+    # custom free text scraping
+    result['programmodels'] = scrape(doc, '//div/p[strong[contains(.,"Program model:")]]/text()')
+    result['modeldescription'] = scrape(doc, '//div/p[strong[contains(.,"Model description")]]/text()')
+
+    # table scraping
+    result['type']      = scrape_row(doc, 'Type')
+    result['focus']     = scrape_row(doc, 'Focus')
+    result['gradesserved']     = scrape_row(doc, 'Grades served')
+    result['firstyear']     = scrape_row(doc, 'First year of operation')
+    result['frl']     = scrape_row(doc, '% FRL')
+    result['minority']     = scrape_row(doc, '% Black or Hispanic')
+    result['revenueperpupil']     = scrape_row(doc, 'Revenue per pupil')
+    result['blendedgrades']     = scrape_row(doc, 'Blended grades')
+    result['blendedenrollment']     = scrape_row(doc, 'Enrollment')
+    result['blendedsubjects']     = scrape_row(doc, 'Blended subjects')
+    result['content']     = scrape_row(doc, 'Content')
+    result['sis']     = scrape_row(doc, 'SIS')
+    result['indylms']     = scrape_row(doc, 'Independent LMS')
+    result['indygradebook'] = scrape_row(doc, 'Independent gradebook')
+    result['indyassessment'] = scrape_row(doc, 'Independent assessment tool')
+    result['profdevel'] = scrape_row(doc, 'Professional development')
+    result['othertools'] = scrape_row(doc, 'Other tools')
+
+
+    # When Innosight updates a profile, they will actually create a new profile
+    # with the same name as the old one. We dedupe based on the post date - most recent
+    # one wins
+    if @results[title]
+      if (Date.parse(@results[title]['postdate']) > Date.parse(result['postdate']))
+        puts "  -- rejected " + result['title'] + "\n"
+        return
+      else
+        puts " -- overwrote previous " + result['title'] + "\n"
       end
+    end
 
-      if (/(.*), (.*)$/.match(scrape_row(doc, 'Headquarters')))
-        result['hqcity'] = $1
-        result['hqstate'] = $2
-      end
-      
-      # custom free text scraping
-      result['programmodels'] = scrape(doc, '//div/p[strong[contains(.,"Program model:")]]/text()')
-      result['modeldescription'] = scrape(doc, '//div/p[strong[contains(.,"Model description")]]/text()')
-
-      # table scraping
-      result['type']      = scrape_row(doc, 'Type')
-      result['focus']     = scrape_row(doc, 'Focus')
-      result['gradesserved']     = scrape_row(doc, 'Grades served')
-      result['firstyear']     = scrape_row(doc, 'First year of operation')
-      result['frl']     = scrape_row(doc, '% FRL')
-      result['minority']     = scrape_row(doc, '% Black or Hispanic')
-      result['revenueperpupil']     = scrape_row(doc, 'Revenue per pupil')
-      result['blendedgrades']     = scrape_row(doc, 'Blended grades')
-      result['blendedenrollment']     = scrape_row(doc, 'Enrollment')
-      result['blendedsubjects']     = scrape_row(doc, 'Blended subjects')
-      result['content']     = scrape_row(doc, 'Content')
-      result['sis']     = scrape_row(doc, 'SIS')
-      result['indylms']     = scrape_row(doc, 'Independent LMS')
-      result['indygradebook'] = scrape_row(doc, 'Independent gradebook')
-      result['indyassessment'] = scrape_row(doc, 'Independent assessment tool')
-      result['profdevel'] = scrape_row(doc, 'Professional development')
-      result['othertools'] = scrape_row(doc, 'Other tools')
-      
-
-      # When Innosight updates a profile, they will actually create a new profile
-      # with the same name as the old one. We dedupe based on the post date - most recent
-      # one wins
-      if @results[title]
-        if (Date.parse(@results[title]['postdate']) > Date.parse(result['postdate']))
-          puts "  -- rejected " + result['title'] + "\n"
-          return
-        else
-          puts " -- overwrote previous " + result['title'] + "\n"
-        end
-      end
-
-      puts " Processed " + result['title'] + "\n"
-      @results[result['title']] = result
+    puts " Processed " + result['title'] + "\n"
+    @results[result['title']] = result
   end
 
   def results
     @results.values
   end
-  
+
   def scrape(doc, search)
     node = doc.search(search).pop
     return node ? node.text.strip : nil 
   end
-  
+
   def scrape_row(doc, field)
     node = doc.xpath('//td[.="' + field + '"]/following-sibling::td[1]').pop
     return node ? node.text.strip : nil 
