@@ -35,8 +35,29 @@ class InnosightScraper
     }
   end
 
+  def read_and_parse(url, tries = 5)
+    try = 1
+    begin
+      html = open(url).read
+      unless ENV['DO_NOT_CACHE_HTML']
+        filename = url.gsub(/[:\/]/, '-')
+        File.open("tmp/#{filename}", "w") { |f| f.puts html }
+      end
+      puts url
+      doc = Nokogiri::HTML(html)
+    rescue Exception => e
+      puts "Encountered exception on try #{try} for to read #{url}:"
+      puts "#{e.class}: #{e.message}"
+      puts e.backtrace
+      puts
+      try += 1
+      retry if try < tries
+    end
+  end
+
   def scrape_link(link)
-    doc = Nokogiri::HTML(open(link['href']))
+    doc = read_and_parse(link['href'])
+
     result = {
       'url' => link['href'],
       'source' => 'innosight'
