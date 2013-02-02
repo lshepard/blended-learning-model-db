@@ -27,6 +27,15 @@ class InnosightScraper
     }
     links.each {|link|
       begin
+        scrape_link(link)
+      rescue Exception => e
+        puts "Issue with #{link['href']} " + e.to_s + "\n"
+        raise e
+      end
+    }
+  end
+
+  def scrape_link(link)
       doc = Nokogiri::HTML(open(link['href']))
       result = {
           'url' => link['href'],
@@ -77,7 +86,7 @@ class InnosightScraper
       if @results[title]
         if (Date.parse(@results[title]['postdate']) > Date.parse(result['postdate']))
           puts "  -- rejected " + result['title'] + "\n"
-          next
+          return
         else
           puts " -- overwrote previous " + result['title'] + "\n"
         end
@@ -85,12 +94,6 @@ class InnosightScraper
 
       puts " Processed " + result['title'] + "\n"
       @results[result['title']] = result
-
-      rescue Exception => e
-        puts "Issue with #{link['href']} " + e.to_s + "\n"
-        raise e
-      end
-    }
   end
 
   def results
