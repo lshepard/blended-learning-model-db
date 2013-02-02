@@ -5,9 +5,15 @@
 function init_ui() {
   $('#tabs').tabs();
 
+  var mapHasBeenInitialized = false;
+
   $('#tabs').bind('tabsshow', function(event, ui) {
-    console.log("attempting to resize");
     if (ui.panel.id == "tabs-2") {
+      if (!mapHasBeenInitialized) {
+        init_map();
+        datatable.fnDraw();
+        mapHasBeenInitialized = true;
+      }
       resize_map();
     }
   });

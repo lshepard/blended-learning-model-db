@@ -16,6 +16,11 @@ function init_map() {
 
 // go through the db, geocode and plot them on a map
 function plot_points(models) {
+  if (!map) {
+    // map is initialized lazily when its tab is revealed,
+    // so bail if it's not yet there.
+    return;
+  }
   clear_markers();
   
   // start with just the whole data set. we'll go to the currently visible in a bit.
