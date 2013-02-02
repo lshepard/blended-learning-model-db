@@ -21,10 +21,6 @@ class InnosightScraper
 
     @results = {}
 
-    # prime the cache, as we've had issues with bad data returns
-    links.each {|link| 
-      Nokogiri::HTML(open(link['href']));
-    }
     links.each {|link|
       begin
         scrape_link(link)
