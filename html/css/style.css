@@ -187,3 +187,31 @@ div.select2-hint {
   font-weight: bold;
   color: #A6263F;
 }
+
+div.header-buttons {
+  overflow: auto;
+  width: 100%
+}
+
+div.header-buttons a.button {
+  float: right;
+  margin-left: 8px;
+}
+
+div.header-buttons a i {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  vertical-align: text-top;
+  background-image: url("http://twitter.github.com/bootstrap/assets/img/glyphicons-halflings.png");
+  background-repeat: no-repeat;
+
+}
+
+i.icon-file {
+  background-position: -24px -24px;
+}
+
+i.icon-plus-sign {
+  background-position: 0px -96px;
+}

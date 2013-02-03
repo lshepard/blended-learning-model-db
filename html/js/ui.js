@@ -17,4 +17,6 @@ function init_ui() {
       resize_map();
     }
   });
+
+  $('a.button').button();
 }
