@@ -154,6 +154,14 @@ table.dataTable tr.even td.sorting_1 { background-color: white; }
     left: -10000px;
 }
 
+body {
+  max-width: 920px;
+}
+
+div#tabs {
+  width: 615px;
+}
+
 .select2-container-multi .select2-choices .select2-search-field input {
   background: transparent !important;
 }
