@@ -255,7 +255,15 @@ function initFilteredColumn(oSettings, iColumn, bSplitOnComma) {
       options.push(deDupedOptions[key]);
     }
     options.sort(function(a, b) {
-        return a.value > b.value ? 1 : ( a.value === b.value ? 0 : -1 );
+      var avalue = a.value,
+          bvalue = b.value;
+
+      if (typeof(avalue) === "string" && typeof(bvalue) === "string") {
+        avalue = avalue.toLowerCase();
+        bvalue = bvalue.toLowerCase();
+      }
+
+      return avalue > bvalue ? 1 : ( avalue === bvalue ? 0 : -1 );
     });
     
     var colNameVar = oSettings.aoColumns[iColumn]['input'].replace(' ', '_').toLowerCase();
