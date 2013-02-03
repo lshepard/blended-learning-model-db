@@ -137,3 +137,18 @@ How to do common tasks
 
   A. The actual school rows are rendered as a single cell of a data table. The rendering function
      is fnCreatedRow in html/js/datatable.js.
+
+Deploy
+===============
+
+```
+[remote "production"]
+	url = git@heroku.com:disruptedstudent.git
+	fetch = +refs/heads/*:refs/remotes/production/*
+[remote "staging"]
+	url = git@heroku.com:disruptedstudent-staging.git
+	fetch = +refs/heads/*:refs/remotes/heroku/*
+```
+
+Preview staging embedded at http://www.innosightinstitute.org/media-room/publications/blended-learning/database-staging/
+Preview localhost:5000 embedded at http://www.innosightinstitute.org/media-room/publications/blended-learning/database-local/
