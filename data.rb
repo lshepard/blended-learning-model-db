@@ -1,12 +1,14 @@
 #
 # Simple passthrough that supplies the Cloudant DB as a JSON file
 #
+$: << File.join(File.dirname(__FILE__), 'lib')
 require 'rubygems'
 require 'bundler/setup'
 require 'couchrest'
 require 'sinatra'
 require 'json'
 require 'mysql2'
+require 'innosight_csv_report'
 
 get '/innosight.json' do
   data = fetch_couch_data
@@ -15,6 +17,16 @@ get '/innosight.json' do
   cache_control :public, :max_age => 600
   content_type 'application/json'
   'table_data = ' + JSON.pretty_generate(data)
+end
+
+get '/innosight.csv' do
+  data = fetch_couch_data
+
+  # print response
+  attachment 'innosight.csv'
+  content_type 'text/csv'
+
+  InnosightCsvReport.new(data).to_csv
 end
 
 # Arguments:
