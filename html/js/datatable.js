@@ -133,7 +133,8 @@ function fnGetColumnsAndData() {
      {input: 'indygradebook',     sTitle: 'Independent Gradebook Grades'},
      {input: 'indyassessment',    sTitle: 'Independent Assessment'},
      {input: 'profdevel',         sTitle: 'Professional Development'},
-     {input: 'alltools',          sTitle: 'edtech tools', bFilterable: true, bSplitOnComma:true}
+     {input: 'alltools',          sTitle: 'edtech tools', bFilterable: true, bSplitOnComma:true},
+     {input: 'renamedto',         sTitle: 'renamed to'}
      ];
 
   // DataTable depends on ordered columns, but we want to have the flexibility to refer
@@ -160,6 +161,10 @@ function fnGetColumnsAndData() {
       alltools.push(data_row[colNumLookup[field]].split(/ *, */));
     }
     data_row[colNumLookup['alltools']] = alltools.join(', ');
+
+    if (data_row[colNumLookup['renamedto']] !== "") {
+      continue;
+    }
 
     data.push(data_row);
   }
