@@ -95,7 +95,7 @@ class InnosightScraper
     result['indyassessment'] = scrape_row(doc, 'Independent assessment tool')
     result['profdevel'] = scrape_row(doc, 'Professional development')
     result['othertools'] = scrape_row(doc, 'Other tools')
-    result['renamedto'] = scrape_row(doc, 'Now operating as')
+    result['renamedto'] = scrape_row(doc, 'Now profiled as')
 
 
     # When Innosight updates a profile, they will actually create a new profile

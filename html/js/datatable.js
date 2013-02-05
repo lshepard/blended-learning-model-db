@@ -134,7 +134,7 @@ function fnGetColumnsAndData() {
      {input: 'indyassessment',    sTitle: 'Independent Assessment'},
      {input: 'profdevel',         sTitle: 'Professional Development'},
      {input: 'alltools',          sTitle: 'edtech tools', bFilterable: true, bSplitOnComma:true},
-     {input: 'renamedto',         sTitle: 'renamed to'}
+     {input: 'renamedto',         sTitle: 'Now Profiled As'}
      ];
 
   // DataTable depends on ordered columns, but we want to have the flexibility to refer
