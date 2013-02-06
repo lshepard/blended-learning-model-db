@@ -199,6 +199,8 @@ div.select2-hint {
 div.header-buttons {
   overflow: auto;
   width: 100%
+  margin-bottom: 20px;
+  padding-bottom: 20px;
 }
 
 div.header-buttons a.button {
