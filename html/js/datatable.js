@@ -298,42 +298,45 @@ function initFilteredColumn(oSettings, iColumn, bSplitOnComma) {
           });
 
 
-    // Encourage user to select multiple via div.select2.hint
-    select.select2("container").
-         find(".select2-choices").
-         append('<div style="display: none;" class="select2-hint">+ Select more...</div>').
-         find('div.select2-hint').
-         mousedown(function(e) {
-           e.stopPropagation();
-         }.bind(select)).
-         mouseup(function(e) {
-           e.stopPropagation();
-           this.select2("open");
-         }.bind(select));
+    // Don't prompt for the title, only for the others...
+    if (select.attr('id') !== 'filtered_title') {
+      // Encourage user to select multiple via div.select2.hint
+      select.select2("container").
+           find(".select2-choices").
+           append('<div style="display: none;" class="select2-hint">+ Select more...</div>').
+           find('div.select2-hint').
+           mousedown(function(e) {
+             e.stopPropagation();
+           }.bind(select)).
+           mouseup(function(e) {
+             e.stopPropagation();
+             this.select2("open");
+           }.bind(select));
 
-    var hideHint = function() {
-      this.select2("container").find("div.select2-hint").hide();
-    };
+      var hideHint = function() {
+        this.select2("container").find("div.select2-hint").hide();
+      };
 
-    var showHint = function(e) {
-      if (this.select2("val").length > 0) {
-        this.select2("container").find("div.select2-hint").show();
-      }
-    };
-
-    select.on('open',   hideHint.bind(select));
-    select.on('close',  showHint.bind(select));
-    select.on('change', showHint.bind(select));
-
-    // once you blur (unfocus) the search, delay and then hide the hint.
-    // without a delay, the hint is sometimes hidden while still choosing more options.
-    select.select2("container").find(".select2-search-field input").blur(function(e) {
-      setTimeout(function() {
-        if (!this.select2("isFocused")) {
-          hideHint.bind(this)();
+      var showHint = function(e) {
+        if (this.select2("val").length > 0) {
+          this.select2("container").find("div.select2-hint").show();
         }
-      }.bind(this), 250);
-    }.bind(select));
+      };
+
+      select.on('open',   hideHint.bind(select));
+      select.on('close',  showHint.bind(select));
+      select.on('change', showHint.bind(select));
+
+      // once you blur (unfocus) the search, delay and then hide the hint.
+      // without a delay, the hint is sometimes hidden while still choosing more options.
+      select.select2("container").find(".select2-search-field input").blur(function(e) {
+        setTimeout(function() {
+          if (!this.select2("isFocused")) {
+            hideHint.bind(this)();
+          }
+        }.bind(this), 250);
+      }.bind(select));
+    }
 
     // This tells the filter which select to use
     oSettings.aoColumns[iColumn].filterSelect = select;
