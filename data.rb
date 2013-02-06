@@ -9,6 +9,7 @@ require 'sinatra'
 require 'json'
 require 'mysql2'
 require 'innosight_csv_report'
+require 'innosight_xls_report'
 
 get '/innosight.json' do
   data = fetch_couch_data
@@ -27,6 +28,16 @@ get '/innosight.csv' do
   content_type 'text/csv'
 
   InnosightCsvReport.new(data).to_csv
+end
+
+get '/innosight.xls' do
+  data = fetch_couch_data
+
+  # print response
+  attachment 'innosight.xls'
+  content_type 'application/xls'
+
+  InnosightXlsReport.new(data).to_xls
 end
 
 # Arguments:

@@ -5,6 +5,7 @@ GEM
       mime-types (~> 1.15)
       multi_json (~> 1.0.0)
       rest-client (~> 1.6.1)
+    erubis (2.7.0)
     mime-types (1.18)
     multi_json (1.0.4)
     mysql2 (0.3.11)
@@ -25,6 +26,7 @@ PLATFORMS
 
 DEPENDENCIES
   couchrest (>= 0.37)
+  erubis
   mysql2
   nokogiri
   rack
