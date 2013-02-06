@@ -92,7 +92,7 @@ class InnosightScraper
     result['sis']     = scrape_row(doc, 'SIS')
     result['indylms']     = scrape_row(doc, 'Independent LMS')
     result['indygradebook'] = scrape_row(doc, 'Independent gradebook')
-    result['indyassessment'] = scrape_row(doc, 'Independent assessment tool')
+    result['indyassessment'] = scrape_row(doc, 'Independent assessment')
     result['profdevel'] = scrape_row(doc, 'Professional development')
     result['othertools'] = scrape_row(doc, 'Other tools')
     result['renamedto'] = scrape_row(doc, 'Now profiled as')
