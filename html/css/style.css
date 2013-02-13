@@ -93,9 +93,6 @@ table.dataTable tr.even td.sorting_1 { background-color: white; }
 .model_row p {
   padding: 10px;
 }
-.model_row .firstyear {
-  display: block;
-}
 
 /*
  * Styling specific to the tabs and page layout.

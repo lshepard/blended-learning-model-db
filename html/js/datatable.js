@@ -223,7 +223,6 @@ function fnCreatedRow( nRow, aData, iDataIndex ) {
             '</h2>');
 
   html.push('<span class="grades"> Grades ' + v('gradesserved') + '</span>');
-  html.push('<span class="firstyear"> First year ' + v('firstyear') + '</span>');
 
   html.push('<span class="model">' + v('programmodels') + '</span>');
 
