@@ -36,17 +36,17 @@ h2 {
 }
 
 a {
-    color: #A6263F;
+    color: #243d99 !important;
     text-decoration: underline;
 }
 a:hover {
-    color: #36C !important;
+    text-decoration: none;
 }
 a:active {
-    color: #978562;
+    text-decoration: none;
 }
 a:visited {
-    color: #393733;
+    color: #243d99 !important;
 }
 
 /**
@@ -167,7 +167,7 @@ ul.select2-choices {
 }
 
 .ui-slider .ui-slider-range {
-  background: #A6263F;
+  background: #243d99;
 }
 
 #gradesserved > span {
@@ -190,7 +190,7 @@ div.select2-hint {
   clear: both;
   float: left;
   font-weight: bold;
-  color: #A6263F;
+  color: #243d99;
 }
 
 div.header-buttons {
@@ -212,7 +212,6 @@ div.header-buttons a i {
   vertical-align: text-top;
   background-image: url("http://twitter.github.com/bootstrap/assets/img/glyphicons-halflings.png");
   background-repeat: no-repeat;
-
 }
 
 i.icon-file {
