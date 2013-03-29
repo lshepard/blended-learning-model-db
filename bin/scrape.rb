@@ -42,9 +42,8 @@ class InnosightScraper
   end
 
   def listing_page_urls
-    # old index url
+    # TODO either intelligently enumerate pages or find a grand listing page like the old one:
     # @@list_url= 'http://www.innosightinstitute.org/media-room/publications/blended-learning/blended-learning-profiles-all-profiles/'
-
     [
       # innosight's profiles
       'http://wpdev.designfarm.com/cci/?cat=41&paged=1',
@@ -162,9 +161,8 @@ end
 innosight = InnosightScraper.new
 
 if (innosight.results)
-  @db = CouchRest.database!("http://localhost:5984/bluscrapes")
   # this should be using the CLOUDANT_URL env variable, but i'm not sure how to get that on my local machine
-  # @db = CouchRest.database!("https://app4701148.heroku:oueLS2tF0oJjCCvIOk6xaHDi@app4701148.heroku.cloudant.com/example")
+  @db = CouchRest.database!("https://app4701148.heroku:oueLS2tF0oJjCCvIOk6xaHDi@app4701148.heroku.cloudant.com/cci-scrape")
   @db.delete!
   @db.create!
   @db.bulk_save(innosight.results)
