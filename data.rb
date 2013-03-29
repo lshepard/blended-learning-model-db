@@ -99,7 +99,8 @@ get '/schools.json' do
 end
 
 def fetch_couch_data
-  @db = CouchRest.database("https://app4701148.heroku:oueLS2tF0oJjCCvIOk6xaHDi@app4701148.heroku.cloudant.com/example")
+  @db = CouchRest.database!("http://localhost:5984/bluscrapes")
+  # @db = CouchRest.database("https://app4701148.heroku:oueLS2tF0oJjCCvIOk6xaHDi@app4701148.heroku.cloudant.com/example")
   data = @db.all_docs({include_docs:true})['rows']
   # remove the non-data rows, such as design docs
   data.select! {|r| !r['id'].match(/^_/)}
