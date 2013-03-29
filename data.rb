@@ -6,10 +6,12 @@ require 'rubygems'
 require 'bundler/setup'
 require 'couchrest'
 require 'sinatra'
+require 'sinatra/streaming'
 require 'json'
 require 'mysql2'
 require 'innosight_csv_report'
 require 'innosight_xls_report'
+require 'innosight_scraper'
 
 get '/innosight.json' do
   data = fetch_couch_data
@@ -38,6 +40,32 @@ get '/innosight.xls' do
   content_type 'application/xls'
 
   InnosightXlsReport.new(data).to_xls
+end
+
+get '/scrape' do
+  '<form action="./scrape" method="post"><input type="submit" value="Run scrape"></input></form>'
+end
+
+post '/scrape' do
+  stream do |out|
+    begin
+      out.puts open("./html/scrapeheader.html").read
+      out.flush
+      10.times do
+        out.puts "hey"
+        out.flush
+        sleep 0.5
+      end
+      raise "wat"
+    rescue Exception => e
+      out.puts "The scraper encountered an error:"
+      out.puts e.message
+      out.puts e.backtrace.join("\n")
+    ensure
+      out.puts open("./html/scrapefooter.html").read
+    end
+  end
+  # InnosightScraper.new(STDOUT).upload
 end
 
 # Arguments:
@@ -100,6 +128,7 @@ end
 
 def fetch_couch_data
   @db = CouchRest.database("https://app4701148.heroku:oueLS2tF0oJjCCvIOk6xaHDi@app4701148.heroku.cloudant.com/cci-scrape")
+  # @db = CouchRest.database!("http://localhost:5984/bluscrapes")
   data = @db.all_docs({include_docs:true})['rows']
   # remove the non-data rows, such as design docs
   data.select! {|r| !r['id'].match(/^_/)}
