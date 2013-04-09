@@ -20,6 +20,7 @@ class InnosightScraper
 
     @logger.info "Reading profile pages..."
 
+
     @results = {}
 
     # Fetch and parse docs in parallel
@@ -45,8 +46,9 @@ class InnosightScraper
 
   def upload
     if results
-      @logger.info "Finished collection results; storing them into the database"
-      # this should be using the CLOUDANT_URL env variable, but i'm not sure how to get that on my local machine
+      @logger.info "Finished collecting results"
+      @logger.info "Storing them into the database"
+      # this should be using the CLOUDANT_URL env variable
       # @db = CouchRest.database!("http://localhost:5984/bluscrapes")
       @db = CouchRest.database!("https://app4701148.heroku:oueLS2tF0oJjCCvIOk6xaHDi@app4701148.heroku.cloudant.com/cci-scrape")
       @logger.info "Recreating db"
