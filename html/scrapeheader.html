@@ -3,9 +3,15 @@
     <title>BLU scraper</title>
   </head>
   <script type="text/javascript">
-    setInterval(function() {
-      document.body.scrollTop = document.body.scrollHeight;
-    }, 250);
+    (function() {
+      var lastScrollHeight = null;
+      setInterval(function() {
+        if (document.body.scrollHeight != lastScrollHeight) {
+          document.body.scrollTop = document.body.scrollHeight;
+          lastScrollHeight = document.body.scrollHeight;
+        }
+      }, 250);
+    })();
   </script>
   <body>
     <h1>BLU scraper</h1>
