@@ -198,6 +198,7 @@ div.header-buttons {
   width: 100%
   margin-bottom: 20px;
   padding-bottom: 20px;
+  clear: both;
 }
 
 div.header-buttons a.button {
@@ -224,4 +225,14 @@ i.icon-plus-sign {
 
 i.icon-download {
   background-position: -120px -24px;
+}
+
+div.masthead img.logo {
+  margin-left: 60px;
+  margin-top: 14px;
+}
+
+div.masthead div.intro {
+  width: 622px;
+  float: right;
 }
