@@ -50,13 +50,7 @@ post '/scrape' do
   stream do |out|
     begin
       out.puts open("./html/scrapeheader.html").read
-      out.flush
-      10.times do
-        out.puts "hey"
-        out.flush
-        sleep 0.5
-      end
-      raise "wat"
+      InnosightScraper.new(out).upload
     rescue Exception => e
       out.puts "The scraper encountered an error:"
       out.puts e.message

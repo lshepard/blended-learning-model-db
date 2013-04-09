@@ -18,6 +18,8 @@ class InnosightScraper
     urls = scrape_profile_urls_from_listing_pages
     @logger.info "Found #{urls.count} blended learning profiles\n"
 
+    @logger.info "Reading profile pages..."
+
     @results = {}
 
     # Fetch and parse docs in parallel
@@ -64,42 +66,26 @@ class InnosightScraper
 
   def scrape_profile_urls_from_listing_pages
     urls = []
-    threads = []
-
-    listing_page_urls.map { |url|
-      threads << Thread.new do
-        doc = read_and_parse(url)
-        links = doc.search('h2.entry-title a')
-        urls << links.map { |a| a['href'] }
-      end
-    }
-
-    threads.each(&:join)
-
+    [
+      Thread.new { urls.push *scrape_profile_urls_from_category_page('http://wpdev.designfarm.com/cci/?cat=41&paged=1') },
+      Thread.new { urls.push *scrape_profile_urls_from_category_page('http://wpdev.designfarm.com/cci/?cat=23&paged=1') }
+    ].each(&:join)
     urls.flatten
   end
 
-  def listing_page_urls
-    # TODO either intelligently enumerate pages or find a grand listing page like the old one:
-    # @@list_url= 'http://www.innosightinstitute.org/media-room/publications/blended-learning/blended-learning-profiles-all-profiles/'
-    [
-      # innosight's profiles
-      'http://wpdev.designfarm.com/cci/?cat=41&paged=1',
-      'http://wpdev.designfarm.com/cci/?cat=41&paged=2',
-      'http://wpdev.designfarm.com/cci/?cat=41&paged=3',
-      'http://wpdev.designfarm.com/cci/?cat=41&paged=4',
-      'http://wpdev.designfarm.com/cci/?cat=41&paged=5',
+  def scrape_profile_urls_from_category_page(url)
+    doc = read_and_parse(url)
+    links = doc.search('h2.entry-title a')
+    current_page_urls = links.map { |a| a['href'] }
 
-      # reader-generated profiles
-      'http://wpdev.designfarm.com/cci/?cat=23&paged=1',
-      'http://wpdev.designfarm.com/cci/?cat=23&paged=2',
-      'http://wpdev.designfarm.com/cci/?cat=23&paged=3',
-      'http://wpdev.designfarm.com/cci/?cat=23&paged=4'
-    ]
+    if next_page_anchor = doc.search('div.navigation div.next a')[0]
+      following_page_urls = scrape_profile_urls_from_category_page(next_page_anchor['href'])
+    end
+
+    current_page_urls + (following_page_urls || [])
   end
 
   def scrape_doc(url, doc)
-
     result = {}
 
     result['url']      = url
