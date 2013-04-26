@@ -15,7 +15,7 @@ class InnosightScraper
   def initialize(output = STDOUT)
     @logger = Logger.new(output)
 
-    urls = scrape_profile_urls_from_listing_pages
+    urls = scrape_profile_urls_from_custom_listing_page
     @logger.info "Found #{urls.count} blended learning profiles\n"
 
     @logger.info "Reading profile pages..."
@@ -66,25 +66,9 @@ class InnosightScraper
 
   private
 
-  def scrape_profile_urls_from_listing_pages
-    urls = []
-    [
-      Thread.new { urls.push *scrape_profile_urls_from_category_page('http://wpdev.designfarm.com/cci/?cat=41&paged=1') },
-      Thread.new { urls.push *scrape_profile_urls_from_category_page('http://wpdev.designfarm.com/cci/?cat=23&paged=1') }
-    ].each(&:join)
-    urls.flatten
-  end
-
-  def scrape_profile_urls_from_category_page(url)
-    doc = read_and_parse(url)
-    links = doc.search('h2.entry-title a')
-    current_page_urls = links.map { |a| a['href'] }
-
-    if next_page_anchor = doc.search('div.navigation div.next a')[0]
-      following_page_urls = scrape_profile_urls_from_category_page(next_page_anchor['href'])
-    end
-
-    current_page_urls + (following_page_urls || [])
+  def scrape_profile_urls_from_custom_listing_page(listing_url = 'http://wpdev.designfarm.com/cci/?page_id=11800')
+    doc = read_and_parse(listing_url)
+    urls = doc.search('#content a').map { |a| a['href'] }
   end
 
   def scrape_doc(url, doc)
@@ -92,9 +76,9 @@ class InnosightScraper
 
     result['url']      = url
     result['source']   = 'innosight'
-    result['title']    = scrape(doc, 'div.post > h2') || scrape(doc, 'div.post > a.sh2')
+    result['title']    = scrape(doc, 'div#main h1')
     result['detail']   = nil # this was not populated with anything intentional anymore JM 28-Mar-2013
-    result['postdate'] = scrape(doc, 'div.post > em.date')
+    result['postdate'] = nil # this is gone on the wp pages, was there on wp posts
 
     if (/(.*), (.*)$/.match(scrape_row(doc, 'Headquarters')))
       result['hqcity']  = $1
