@@ -110,16 +110,10 @@ class InnosightScraper
     result['renamedto']        = scrape_row(doc, 'Now profiled as')
 
     # When Innosight updates a profile, they will actually create a new profile
-    # with the same name as the old one. We dedupe based on the post date - most recent
+    # with the same name as the old one. We dedupe based on the listing - last
     # one wins
-    title = result['title']
-    if @results[title]
-      if (Date.parse(@results[title]['postdate']) > Date.parse(result['postdate']))
-        @logger.info "  -- rejected " + result['title']
-        return
-      else
-        @logger.info " -- overwrote previous " + result['title']
-      end
+    if @results[result['title']]
+      @logger.info " -- overwriting previous " + result['title']
     end
 
     @logger.info " Processed " + result['title'] + "\n"
