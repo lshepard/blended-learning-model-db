@@ -117,7 +117,7 @@ class InnosightScraper
     end
 
     @logger.info " Processed " + result['title'] + "\n"
-    @results[title] = result
+    @results[result['title']] = result
   end
 
 
