@@ -100,7 +100,7 @@ function onGradesServedSliderChange(event, ui) {
 
 /*
  * This method defines the columns and attributes, and converts
- * the data in innosight.json into a format that DataTable expects.
+ * the data in innosight.js into a format that DataTable expects.
  * 
  * Returns an object with keys aoColumns and aaData.
  */

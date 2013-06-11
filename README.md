@@ -78,7 +78,7 @@ with my Heroku account.
 
 To view the contents, visit the following page in your browser (this is what the JS app uses):
 
-    http://localhost:5000/data/innosight.json
+    http://localhost:5000/data/innosight.js
 
 
 How to do common tasks

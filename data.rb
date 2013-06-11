@@ -12,12 +12,12 @@ require 'mysql2'
 require 'innosight_csv_report'
 require 'innosight_scraper'
 
-get '/innosight.json' do
+get '/innosight.js' do
   data = fetch_couch_data
   
   # print response
   cache_control :public, :max_age => 600
-  content_type 'application/json'
+  content_type 'text/javascript'
   'table_data = ' + JSON.pretty_generate(data)
 end
 
