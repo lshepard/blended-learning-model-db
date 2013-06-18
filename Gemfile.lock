@@ -6,6 +6,7 @@ GEM
       mime-types (~> 1.15)
       multi_json (~> 1.0.0)
       rest-client (~> 1.6.1)
+    curb (0.8.1)
     daemons (1.1.9)
     erubis (2.7.0)
     eventmachine (1.0.3)
@@ -42,6 +43,7 @@ PLATFORMS
 
 DEPENDENCIES
   couchrest (>= 0.37)
+  curb
   erubis
   mysql2
   nokogiri

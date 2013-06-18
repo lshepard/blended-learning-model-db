@@ -28,9 +28,9 @@ class InnosightScraper
     threads = []
     urls.each do |url|
       begin
-        threads << Thread.new do
+        # threads << Thread.new do
           docs[url] = read_and_parse(url)
-        end
+        # end
       rescue Exception => e
         @logger.info "Issue reading #{url} " + e.to_s + "\n"
         raise e
@@ -40,7 +40,11 @@ class InnosightScraper
 
     # Parse serially (since some overwrite others, and this is fast enough anyway)
     docs.each do |url, doc|
-      scrape_doc(url, doc)
+      begin
+        scrape_doc(url, doc)
+      rescue Exception => e
+        @logger.info "Issue scraping #{url} " + e.to_s + "\n"
+      end
     end
   end
 
@@ -66,7 +70,7 @@ class InnosightScraper
 
   private
 
-  def scrape_profile_urls_from_custom_listing_page(listing_url = 'http://wpdev.designfarm.com/cci/?page_id=11800')
+  def scrape_profile_urls_from_custom_listing_page(listing_url = 'http://www.christenseninstitute.org/blended-learning-profiles/')
     doc = read_and_parse(listing_url)
     urls = doc.search('#content a').map { |a| a['href'] }
   end
@@ -116,7 +120,7 @@ class InnosightScraper
       @logger.info " -- overwriting previous " + result['title']
     end
 
-    @logger.info " Processed " + result['title'] + "\n"
+    @logger.info " Processed #{result['title']}\n"
     @results[result['title']] = result
   end
 
@@ -139,10 +143,17 @@ class InnosightScraper
     end
   end
 
+  require 'curl'
   def read_and_parse(url, tries = 5)
     try = 1
     begin
-      html = open(url).read
+      sleep 1
+      curl = Curl::Easy.new
+      curl.follow_location = true
+      curl.url = url
+      curl.perform
+      raise "Got a #{curl.response_code} HTTP resonsecode" if curl.response_code != 200
+      html = curl.body_str
       if ENV['SAVE_HTML_FOR_DEBUGGING']
         filename = url.gsub(/[:\/]/, '-')
         File.open("tmp/#{filename}", "w") { |f| f.puts html }

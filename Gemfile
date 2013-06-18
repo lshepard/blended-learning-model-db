@@ -8,3 +8,4 @@ gem "mysql2"
 gem "erubis"
 gem "sinatra-contrib"
 gem "thin"
+gem 'curb'
