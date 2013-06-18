@@ -72,7 +72,7 @@ class InnosightScraper
 
   def scrape_profile_urls_from_custom_listing_page(listing_url = 'http://www.christenseninstitute.org/blended-learning-profiles/')
     doc = read_and_parse(listing_url)
-    urls = doc.search('#content a').map { |a| a['href'] }
+    urls = doc.search('#content a').map { |a| a['href'].to_s.strip }
   end
 
   def scrape_doc(url, doc)
